@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option csharp_namespace = "CountryService.Grpc.v1";
+
+package CountryService.v1;
+
+import "google/protobuf/empty.proto";
+
+service CountryService {
+  rpc Create(stream CountryCreateRequest) returns (stream CountryCreateReply);
+  rpc Update(CountryUpdateRequest) returns (google.protobuf.Empty);
+  rpc Delete(CountryIdRequest) returns (google.protobuf.Empty);
+  rpc Get(CountryIdRequest) returns (CountryReply);
+  rpc GetAll(google.protobuf.Empty) returns (stream CountryReply);
+}
+
+message CountryReply {
+  int32 Id = 1;
+  string Name = 2;
+  string Description = 3;
+  string FlagUri = 4;
+  string Anthem = 5;
+  string CapitalCity = 6;
+  repeated string Languages = 7;
+}
+
+message CountryIdRequest {
+  int32 Id = 1;
+}
+
+message CountryUpdateRequest {
+  int32 Id = 1;
+  string Description = 2;
+}
+
+message CountryCreateRequest {
+  string Name = 1;
+  string Description = 2;
+  string FlagUri = 3;
+  string Anthem = 4;
+  string CapitalCity = 5;
+  repeated int32 Languages = 6;
+}
+
+message CountryCreateReply {
+  int32 Id = 1;
+  string Name = 2;
+}

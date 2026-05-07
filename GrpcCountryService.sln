@@ -1,8 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CountryContracts", "CountryContracts", "{BDB8CC08-624C-41DC-9AB0-BBFC122231B7}"
+EndProject
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{A31B17FA-2408-4A22-AFF1-EE746EBECDF1}"
+	ProjectSection(SolutionItems) = preProject
+		CountryContracts\Protos\country.proto = CountryContracts\Protos\country.proto
+	EndProjectSection
+EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A31B17FA-2408-4A22-AFF1-EE746EBECDF1} = {BDB8CC08-624C-41DC-9AB0-BBFC122231B7}
 	EndGlobalSection
 EndGlobal
