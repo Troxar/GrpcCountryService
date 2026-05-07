@@ -1,0 +1,1 @@
+global using CountryService.Domain.Models;

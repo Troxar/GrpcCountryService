@@ -8,6 +8,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{A31B17
 		CountryContracts\Protos\country.proto = CountryContracts\Protos\country.proto
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gRPC", "gRPC", "{6DF46BE4-096D-4A9D-9F2D-BBFB77DEC4BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.Domain", "CountryService\CountryService.Domain\CountryService.Domain.csproj", "{93C35062-E059-4C62-BAB8-F16707A65282}"
+EndProject
 
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +19,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{93C35062-E059-4C62-BAB8-F16707A65282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93C35062-E059-4C62-BAB8-F16707A65282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93C35062-E059-4C62-BAB8-F16707A65282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93C35062-E059-4C62-BAB8-F16707A65282}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A31B17FA-2408-4A22-AFF1-EE746EBECDF1} = {BDB8CC08-624C-41DC-9AB0-BBFC122231B7}
+		{93C35062-E059-4C62-BAB8-F16707A65282} = {6DF46BE4-096D-4A9D-9F2D-BBFB77DEC4BE}
 	EndGlobalSection
 EndGlobal
