@@ -17,6 +17,16 @@ public class CountryContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CountryContext).Assembly);
+        SeedLanguages(modelBuilder);
         base.OnModelCreating(modelBuilder);
+    }
+    
+    private static void SeedLanguages(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Language>().HasData(
+            new Language { Id = 1, Name = "English" },
+            new Language { Id = 2, Name = "French" },
+            new Language { Id = 3, Name = "Spanish" }
+        );
     }
 }
