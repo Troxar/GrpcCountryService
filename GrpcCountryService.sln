@@ -5,22 +5,26 @@ EndProject
 
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protos", "Protos", "{A31B17FA-2408-4A22-AFF1-EE746EBECDF1}"
 	ProjectSection(SolutionItems) = preProject
-		CountryContracts\Protos\country.proto = CountryContracts\Protos\country.proto
+		src\CountryContracts\Protos\country.proto = src\CountryContracts\Protos\country.proto
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gRPC", "gRPC", "{6DF46BE4-096D-4A9D-9F2D-BBFB77DEC4BE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CountryService", "CountryService", "{6DF46BE4-096D-4A9D-9F2D-BBFB77DEC4BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.Domain", "CountryService\CountryService.Domain\CountryService.Domain.csproj", "{93C35062-E059-4C62-BAB8-F16707A65282}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.Domain", "src\CountryService\CountryService.Domain\CountryService.Domain.csproj", "{93C35062-E059-4C62-BAB8-F16707A65282}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.DAL", "CountryService\CountryService.DAL\CountryService.DAL.csproj", "{4EBAD05C-F505-4250-8B26-3074D191F2FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.DAL", "src\CountryService\CountryService.DAL\CountryService.DAL.csproj", "{4EBAD05C-F505-4250-8B26-3074D191F2FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.BLL", "CountryService\CountryService.BLL\CountryService.BLL.csproj", "{697848A7-81AD-45C9-A2D9-74C72BDC6864}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.BLL", "src\CountryService\CountryService.BLL\CountryService.BLL.csproj", "{697848A7-81AD-45C9-A2D9-74C72BDC6864}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.Grpc", "CountryService\CountryService.Grpc\CountryService.Grpc.csproj", "{CE24F70C-B7C5-45DF-B85D-1479D10B6436}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.Grpc", "src\CountryService\CountryService.Grpc\CountryService.Grpc.csproj", "{CE24F70C-B7C5-45DF-B85D-1479D10B6436}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BF51224F-8DB3-4443-9E2B-2FF1F95990C9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CountryService", "CountryService", "{BF51224F-8DB3-4443-9E2B-2FF1F95990C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.DAL.Tests", "CountryService\CountryService.Tests\CountryService.DAL.Tests\CountryService.DAL.Tests.csproj", "{8443771E-59B2-46A4-A507-F9168048D912}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.DAL.Tests", "tests\CountryService\CountryService.DAL.Tests\CountryService.DAL.Tests.csproj", "{8443771E-59B2-46A4-A507-F9168048D912}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6572D0EC-141A-4F7D-BEE3-2CF5EB1F1DE2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{77B77A4B-3E4E-481D-B898-2ACAC5563EEF}"
 EndProject
 
 Global
@@ -57,5 +61,8 @@ Global
 		{697848A7-81AD-45C9-A2D9-74C72BDC6864} = {6DF46BE4-096D-4A9D-9F2D-BBFB77DEC4BE}
 		{CE24F70C-B7C5-45DF-B85D-1479D10B6436} = {6DF46BE4-096D-4A9D-9F2D-BBFB77DEC4BE}
 		{8443771E-59B2-46A4-A507-F9168048D912} = {BF51224F-8DB3-4443-9E2B-2FF1F95990C9}
+		{BDB8CC08-624C-41DC-9AB0-BBFC122231B7} = {6572D0EC-141A-4F7D-BEE3-2CF5EB1F1DE2}
+		{6DF46BE4-096D-4A9D-9F2D-BBFB77DEC4BE} = {6572D0EC-141A-4F7D-BEE3-2CF5EB1F1DE2}
+		{BF51224F-8DB3-4443-9E2B-2FF1F95990C9} = {77B77A4B-3E4E-481D-B898-2ACAC5563EEF}
 	EndGlobalSection
 EndGlobal

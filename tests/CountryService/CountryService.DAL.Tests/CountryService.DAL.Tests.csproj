@@ -9,9 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\CountryService.BLL\CountryService.BLL.csproj" />
-      <ProjectReference Include="..\..\CountryService.DAL\CountryService.DAL.csproj" />
-      <ProjectReference Include="..\..\CountryService.Domain\CountryService.Domain.csproj" />
+      <ProjectReference Include="..\..\..\src\CountryService\CountryService.DAL\CountryService.DAL.csproj" />
+      <ProjectReference Include="..\..\..\src\CountryService\CountryService.Domain\CountryService.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -12,7 +12,7 @@ public static class CountryMapper
             CapitalCity = x.CapitalCity,
             Anthem = x.Anthem,
             FlagUri = x.FlagUri,
-            Languages = x.CountryLanguages!.Select(y => y.Language.Name)
+            Languages = x.CountryLanguages!.Select(y => y.Language!.Name)
         });
     }
 
