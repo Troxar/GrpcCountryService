@@ -1,0 +1,11 @@
+global using CountryService.DAL.Database;
+global using CountryService.DAL.Database.Entities;
+global using CountryService.DAL.Repositories;
+global using CountryService.DAL.Tests.Infrastructure;
+global using CountryService.DAL.Tests.Utils;
+global using CountryService.Domain.Models;
+global using FluentAssertions;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Configuration;
+global using Testcontainers.PostgreSql;
+global using Xunit;
