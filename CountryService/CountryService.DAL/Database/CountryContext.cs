@@ -1,12 +1,20 @@
+using Microsoft.Extensions.Configuration;
+
 namespace CountryService.DAL.Database;
 
 public class CountryContext : DbContext
 {
+    private readonly IConfiguration _configuration;
+
+    public CountryContext(DbContextOptions<CountryContext> options, IConfiguration configuration)
+        : base(options)
+    {
+        _configuration = configuration;
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // TODO: take from configuration
-        const string connectionString =
-            "Host=localhost;Port=9595;Database=CountryService;Username=postgres;Password=secretpassword";
+        var connectionString = _configuration.GetConnectionString("CountryService");
         optionsBuilder.UseNpgsql(connectionString);
     }
 
@@ -20,7 +28,7 @@ public class CountryContext : DbContext
         SeedLanguages(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
-    
+
     private static void SeedLanguages(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Language>().HasData(

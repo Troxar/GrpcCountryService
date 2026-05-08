@@ -1,0 +1,11 @@
+global using CountryService.DAL.Database;
+global using CountryService.DAL.Repositories;
+global using CountryService.Domain.Repositories;
+global using CountryService.Domain.Services;
+global using CountryService.Grpc.Extensions;
+global using CountryService.Grpc.Mappers;
+global using CountryService.Grpc.Services;
+global using CountryService.Grpc.v1;
+global using Google.Protobuf.WellKnownTypes;
+global using Grpc.Core;
+global using Microsoft.EntityFrameworkCore;
