@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gRPC", "gRPC", "{6DF46BE4-0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.Domain", "CountryService\CountryService.Domain\CountryService.Domain.csproj", "{93C35062-E059-4C62-BAB8-F16707A65282}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.DAL", "CountryService.DAL\CountryService.DAL.csproj", "{4EBAD05C-F505-4250-8B26-3074D191F2FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.DAL", "CountryService\CountryService.DAL\CountryService.DAL.csproj", "{4EBAD05C-F505-4250-8B26-3074D191F2FA}"
 EndProject
 
 Global
