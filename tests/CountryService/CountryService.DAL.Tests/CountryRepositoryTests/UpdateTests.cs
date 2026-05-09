@@ -1,6 +1,5 @@
 namespace CountryService.DAL.Tests.CountryRepositoryTests;
 
-[Collection(PostgreSqlCollection.Name)]
 public class UpdateTests(PostgreSqlFixture fixture) : CountryRepositoryTestsBase(fixture)
 {
     [Fact]

@@ -1,4 +1,4 @@
-namespace CountryService.DAL.Tests.Infrastructure;
+namespace CountryService.DAL.Tests.CountryRepositoryTests;
 
 [Collection(PostgreSqlCollection.Name)]
 public abstract class CountryRepositoryTestsBase(PostgreSqlFixture fixture) : IAsyncLifetime

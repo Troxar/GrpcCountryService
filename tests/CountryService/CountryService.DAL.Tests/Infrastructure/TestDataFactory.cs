@@ -1,4 +1,4 @@
-namespace CountryService.DAL.Tests.Utils;
+namespace CountryService.DAL.Tests.Infrastructure;
 
 internal static class TestDataFactory
 {
