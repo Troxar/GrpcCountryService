@@ -1,0 +1,11 @@
+global using CountryService.Domain.Models;
+global using CountryService.Domain.Services;
+global using CountryService.Grpc.Services;
+global using CountryService.Grpc.Tests.Infrastructure;
+global using CountryService.Grpc.v1;
+global using FluentAssertions;
+global using Google.Protobuf.WellKnownTypes;
+global using Grpc.Core;
+global using Grpc.Core.Testing;
+global using NSubstitute;
+global using Xunit;
