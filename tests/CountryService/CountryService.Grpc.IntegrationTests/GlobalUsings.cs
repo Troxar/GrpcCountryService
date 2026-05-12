@@ -1,0 +1,17 @@
+global using CountryService.DAL.Database;
+global using CountryService.DAL.Database.Entities;
+global using CountryService.Grpc.IntegrationTests.Infrastructure;
+global using CountryService.Grpc.v1;
+global using FluentAssertions;
+global using Google.Protobuf.WellKnownTypes;
+global using Grpc.Core;
+global using Grpc.Net.Client;
+global using Microsoft.AspNetCore.Hosting;
+global using Microsoft.AspNetCore.Mvc.Testing;
+global using Microsoft.AspNetCore.TestHost;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.DependencyInjection.Extensions;
+global using Testcontainers.PostgreSql;
+global using Xunit;

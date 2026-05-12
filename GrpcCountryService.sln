@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.BLL.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.Grpc.Tests", "tests\CountryService\CountryService.Grpc.Tests\CountryService.Grpc.Tests.csproj", "{7282EC36-B769-4AD0-9A33-744C43351EE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.Grpc.IntegrationTests", "tests\CountryService\CountryService.Grpc.IntegrationTests\CountryService.Grpc.IntegrationTests.csproj", "{1E5C526C-7E9C-4776-8D81-0D341BA75FC8}"
+EndProject
 
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{7282EC36-B769-4AD0-9A33-744C43351EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7282EC36-B769-4AD0-9A33-744C43351EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7282EC36-B769-4AD0-9A33-744C43351EE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E5C526C-7E9C-4776-8D81-0D341BA75FC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E5C526C-7E9C-4776-8D81-0D341BA75FC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E5C526C-7E9C-4776-8D81-0D341BA75FC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E5C526C-7E9C-4776-8D81-0D341BA75FC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A31B17FA-2408-4A22-AFF1-EE746EBECDF1} = {BDB8CC08-624C-41DC-9AB0-BBFC122231B7}
@@ -78,5 +84,6 @@ Global
 		{BF51224F-8DB3-4443-9E2B-2FF1F95990C9} = {77B77A4B-3E4E-481D-B898-2ACAC5563EEF}
 		{E78693F1-D5AD-440D-9A32-FDDBFFADACA5} = {BF51224F-8DB3-4443-9E2B-2FF1F95990C9}
 		{7282EC36-B769-4AD0-9A33-744C43351EE8} = {BF51224F-8DB3-4443-9E2B-2FF1F95990C9}
+		{1E5C526C-7E9C-4776-8D81-0D341BA75FC8} = {BF51224F-8DB3-4443-9E2B-2FF1F95990C9}
 	EndGlobalSection
 EndGlobal
