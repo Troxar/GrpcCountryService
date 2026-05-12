@@ -7,16 +7,20 @@ builder.Services.AddGrpc(options =>
     options.MaxReceiveMessageSize = 1024 * 1024 * 6;
     options.MaxSendMessageSize = 1024 * 1024 * 6;
 });
-builder.Services.AddGrpcReflection();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<ICountryService, CountryService.BLL.Services.CountryService>();
 builder.Services.AddDbContext<CountryContext>();
+
+if (builder.Environment.IsDevelopment())
+    builder.Services.AddGrpcReflection();
 
 var app = builder.Build();
 
 app.ApplyMigrations();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client");
-app.MapGrpcReflectionService();
 app.MapGrpcService<CountryGrpcService>();
+
+if (app.Environment.IsDevelopment())
+    app.MapGrpcReflectionService();
 
 app.Run();
