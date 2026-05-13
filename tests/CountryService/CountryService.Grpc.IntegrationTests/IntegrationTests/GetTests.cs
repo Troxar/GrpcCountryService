@@ -43,4 +43,25 @@ public class GetTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsB
         exception.Which.StatusCode.Should().Be(StatusCode.NotFound);
         exception.Which.Status.Detail.Should().Contain("Country with Id 999 hasn't been found");
     }
+
+    [Fact]
+    public async Task ShouldReturnResponseCompressedWithBrotli_WhenClientSupportsBrotli()
+    {
+        // Arrange
+        var country = TestDataFactory.CreateCountry();
+        await SeedCountriesAsync(country);
+
+        var request = TestDataFactory.CreateCountryIdRequest(country.Id);
+
+        // Act
+        var reply = await Fixture.Client.GetAsync(request, cancellationToken: CancellationToken);
+
+        // Assert
+        reply.Id.Should().Be(country.Id);
+
+        var responseHeaders = Fixture.ResponseHeadersCaptureHandler.LastResponseHeaders;
+        responseHeaders.Should().NotBeNull();
+        responseHeaders.TryGetValues("grpc-encoding", out var values).Should().BeTrue();
+        values.Should().ContainSingle().Which.Should().Be("br");
+    }
 }

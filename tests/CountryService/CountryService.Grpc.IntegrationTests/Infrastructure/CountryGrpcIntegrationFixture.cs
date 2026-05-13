@@ -10,6 +10,7 @@ public class CountryGrpcIntegrationFixture : IAsyncLifetime
 
     public CountryGrpcWebApplicationFactory Factory { get; private set; } = null!;
     public v1.CountryService.CountryServiceClient Client { get; private set; } = null!;
+    public ResponseHeadersCaptureHandler ResponseHeadersCaptureHandler { get; private set; } = null!;
 
     public async ValueTask InitializeAsync()
     {
@@ -21,10 +22,15 @@ public class CountryGrpcIntegrationFixture : IAsyncLifetime
         var context = scope.ServiceProvider.GetRequiredService<CountryContext>();
 
         await context.Database.MigrateAsync();
-        
+
+        ResponseHeadersCaptureHandler = new ResponseHeadersCaptureHandler(Factory.Server.CreateHandler());
         var channel = GrpcChannel.ForAddress("https://localhost", new GrpcChannelOptions
         {
-            HttpHandler = Factory.Server.CreateHandler()
+            HttpHandler = ResponseHeadersCaptureHandler,
+            CompressionProviders = new List<ICompressionProvider>
+            {
+                new BrotliCompressionProvider()
+            }
         });
         Client = new v1.CountryService.CountryServiceClient(channel);
     }

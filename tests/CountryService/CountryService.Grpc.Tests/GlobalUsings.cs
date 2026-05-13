@@ -1,5 +1,7 @@
+global using System.Text;
 global using CountryService.Domain.Models;
 global using CountryService.Domain.Services;
+global using CountryService.Grpc.Compression;
 global using CountryService.Grpc.Services;
 global using CountryService.Grpc.Tests.Infrastructure;
 global using CountryService.Grpc.v1;

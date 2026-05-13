@@ -1,11 +1,14 @@
+global using System.Net.Http.Headers;
 global using CountryService.DAL.Database;
 global using CountryService.DAL.Database.Entities;
+global using CountryService.Grpc.Compression;
 global using CountryService.Grpc.IntegrationTests.Infrastructure;
 global using CountryService.Grpc.v1;
 global using FluentAssertions;
 global using Google.Protobuf.WellKnownTypes;
 global using Grpc.Core;
 global using Grpc.Net.Client;
+global using Grpc.Net.Compression;
 global using Microsoft.AspNetCore.Hosting;
 global using Microsoft.AspNetCore.Mvc.Testing;
 global using Microsoft.AspNetCore.TestHost;
