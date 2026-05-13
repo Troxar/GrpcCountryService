@@ -12,6 +12,7 @@ builder.Services.AddGrpc(options =>
     };
     options.ResponseCompressionAlgorithm = "br";
     options.ResponseCompressionLevel = CompressionLevel.Optimal;
+    options.Interceptors.Add<ExceptionInterceptor>();
 });
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<ICountryService, CountryService.BLL.Services.CountryService>();
