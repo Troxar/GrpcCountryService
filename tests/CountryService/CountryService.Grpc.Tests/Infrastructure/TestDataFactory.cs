@@ -2,13 +2,17 @@ namespace CountryService.Grpc.Tests.Infrastructure;
 
 internal static class TestDataFactory
 {
-    internal static ServerCallContext CreateServerCallContext()
+    internal static ServerCallContext CreateServerCallContext(string? correlationId = null)
     {
+        var requestHeaders = new Metadata();
+        if (correlationId is not null)
+            requestHeaders.Add("x-correlation-id", correlationId);
+        
         return TestServerCallContext.Create(
             method: "test",
             host: "localhost",
             deadline: DateTime.UtcNow.AddMinutes(1),
-            requestHeaders: [],
+            requestHeaders: requestHeaders,
             cancellationToken: CancellationToken.None,
             peer: "ipv4:127.0.0.1:5000",
             authContext: null,
