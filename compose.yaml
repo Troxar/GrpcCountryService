@@ -1,0 +1,43 @@
+﻿name: grpc-country-service
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: countryservice-postgres
+    environment:
+      POSTGRES_DB: CountryService
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secretpassword
+    ports:
+      - "9595:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d CountryService" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      
+  countryservice-grpc:
+    build:
+      context: .
+      dockerfile: src/CountryService/CountryService.Grpc/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      
+      Kestrel__Endpoints__Grpc__Url: http://0.0.0.0:5076
+      Kestrel__Endpoints__Grpc__Protocols: Http2
+      
+      Kestrel__Endpoints__Http__Url: http://0.0.0.0:5080
+      Kestrel__Endpoints__Http__Protocols: Http1
+      
+      ConnectionStrings__CountryService: Host=postgres;Port=5432;Database=CountryService;Username=postgres;Password=secretpassword;GSS Encryption Mode=Disable
+    ports:
+      - "5076:5076"
+      - "5080:5080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+        
+volumes:
+  postgres_data:

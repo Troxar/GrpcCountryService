@@ -32,6 +32,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.Grpc.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountryService.Grpc.IntegrationTests", "tests\CountryService\CountryService.Grpc.IntegrationTests\CountryService.Grpc.IntegrationTests.csproj", "{1E5C526C-7E9C-4776-8D81-0D341BA75FC8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{334F94FA-6480-4F76-87C2-FD4F92212B15}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
 
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
