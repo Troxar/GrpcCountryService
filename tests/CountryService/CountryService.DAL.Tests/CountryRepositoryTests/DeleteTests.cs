@@ -1,6 +1,6 @@
 namespace CountryService.DAL.Tests.CountryRepositoryTests;
 
-public class DeleteTests(PostgreSqlFixture fixture) : CountryRepositoryTestsBase(fixture)
+public sealed class DeleteTests(PostgreSqlFixture fixture) : CountryRepositoryTestsBase(fixture)
 {
     [Fact]
     public async Task ShouldDeleteCountry_AndReturnAffectedRows_WhenCountryExists()

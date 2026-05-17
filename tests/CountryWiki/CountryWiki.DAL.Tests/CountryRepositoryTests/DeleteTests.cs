@@ -1,6 +1,6 @@
 namespace CountryWiki.DAL.Tests.CountryRepositoryTests;
 
-public class DeleteTests : CountryRepositoryTestsBase
+public sealed class DeleteTests : CountryRepositoryTestsBase
 {
     [Fact]
     public async Task ShouldSendCountryIdRequest()

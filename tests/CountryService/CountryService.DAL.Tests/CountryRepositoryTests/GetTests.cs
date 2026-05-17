@@ -1,6 +1,6 @@
 namespace CountryService.DAL.Tests.CountryRepositoryTests;
 
-public class GetTests(PostgreSqlFixture fixture) : CountryRepositoryTestsBase(fixture)
+public sealed class GetTests(PostgreSqlFixture fixture) : CountryRepositoryTestsBase(fixture)
 {
     [Fact]
     public async Task ShouldReturnCountryModel_WhenCountryExists()
@@ -24,12 +24,7 @@ public class GetTests(PostgreSqlFixture fixture) : CountryRepositoryTestsBase(fi
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(country.Id);
-        result.Name.Should().Be(country.Name);
-        result.Description.Should().Be(country.Description);
-        result.FlagUri.Should().Be(country.FlagUri);
-        result.CapitalCity.Should().Be(country.CapitalCity);
-        result.Anthem.Should().Be(country.Anthem);
+        result.Should().BeEquivalentTo(country, options => options.ExcludingMissingMembers());
         result.Languages.Should().BeEquivalentTo("English", "French");
     }
 

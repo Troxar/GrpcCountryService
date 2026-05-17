@@ -1,6 +1,6 @@
 namespace CountryService.BLL.Tests.CountryServiceTests;
 
-public class DeleteTests : CountryServiceTestsBase
+public sealed class DeleteTests : CountryServiceTestsBase
 {
     [Fact]
     public async Task ShouldReturnTrue_WhenRepositoryReturnsAffectedRows()

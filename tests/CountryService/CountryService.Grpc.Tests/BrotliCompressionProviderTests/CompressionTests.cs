@@ -1,8 +1,8 @@
 using CompressionLevel = System.IO.Compression.CompressionLevel;
 
-namespace CountryService.Grpc.Tests.Compression;
+namespace CountryService.Grpc.Tests.BrotliCompressionProviderTests;
 
-public class BrotliCompressionProviderTests
+public sealed class CompressionTests
 {
     [Fact]
     public async Task ShouldCompressAndDecompressPayload()

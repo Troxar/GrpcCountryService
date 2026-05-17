@@ -1,6 +1,6 @@
 namespace CountryService.Grpc.Tests.CountryGrpcServiceTests;
 
-public class GetTests : CountryGrpcServiceTestsBase
+public sealed class GetTests : CountryGrpcServiceTestsBase
 {
     [Fact]
     public async Task ShouldReturnCountryReply_WhenCountryExists()
@@ -15,8 +15,7 @@ public class GetTests : CountryGrpcServiceTestsBase
         var result = await GrpcService.Get(request, ServerCallContext);
 
         // Assert
-        result.Id.Should().Be(model.Id);
-        result.Name.Should().Be(model.Name);
+        result.Should().BeEquivalentTo(model);
     }
     
     [Fact]

@@ -1,6 +1,6 @@
 namespace CountryService.Grpc.IntegrationTests.IntegrationTests;
 
-public class CreateTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsBase(fixture)
+public sealed class CreateTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsBase(fixture)
 {
     [Fact]
     public async Task ShouldCreateCountriesAndReturnReplies_WhenRequestStreamContainsCountries()

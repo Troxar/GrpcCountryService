@@ -1,6 +1,6 @@
 namespace CountryService.Grpc.Tests.CountryGrpcServiceTests;
 
-public class DeleteTests : CountryGrpcServiceTestsBase
+public sealed class DeleteTests : CountryGrpcServiceTestsBase
 {
     [Fact]
     public async Task ShouldReturnEmpty_WhenCountryWasDeleted()

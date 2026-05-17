@@ -1,6 +1,6 @@
 namespace CountryService.Grpc.Tests.CountryGrpcServiceTests;
 
-public class UpdateTests : CountryGrpcServiceTestsBase
+public sealed class UpdateTests : CountryGrpcServiceTestsBase
 {
     [Fact]
     public async Task ShouldReturnEmpty_WhenCountryWasUpdated()

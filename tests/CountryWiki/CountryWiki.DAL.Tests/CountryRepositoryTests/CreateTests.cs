@@ -1,6 +1,6 @@
 namespace CountryWiki.DAL.Tests.CountryRepositoryTests;
 
-public class CreateTests : CountryRepositoryTestsBase
+public sealed class CreateTests : CountryRepositoryTestsBase
 {
     [Fact]
     public async Task ShouldWriteRequests_CompleteStream_AndReturnReplies_WhenCountriesProvided()
@@ -27,19 +27,9 @@ public class CreateTests : CountryRepositoryTestsBase
 
         // Assert
         requestStream.IsCompleted.Should().BeTrue();
-        requestStream.Messages.Should().HaveCount(countriesToCreate.Length);
-        foreach (var countryToCreate in countriesToCreate)
-            requestStream.Messages.Should().ContainSingle(x =>
-                x.Name == countryToCreate.Name
-                && x.Description == countryToCreate.Description
-                && x.FlagUri == countryToCreate.FlagUri
-                && x.Anthem == countryToCreate.Anthem
-                && x.CapitalCity == countryToCreate.CapitalCity);
-
-        result.Should().HaveCount(replies.Length);
-        foreach (var reply in replies)
-            result.Should().ContainSingle(x =>
-                x.Id == reply.Id
-                && x.Name == reply.Name);
+        requestStream.Messages.Should().BeEquivalentTo(countriesToCreate);
+        
+        result.Should().BeEquivalentTo(replies, options => options
+            .ComparingByMembers<CountryCreateReply>());
     }
 }

@@ -1,6 +1,6 @@
 namespace CountryService.DAL.Tests.CountryRepositoryTests;
 
-public class UpdateTests(PostgreSqlFixture fixture) : CountryRepositoryTestsBase(fixture)
+public sealed class UpdateTests(PostgreSqlFixture fixture) : CountryRepositoryTestsBase(fixture)
 {
     [Fact]
     public async Task ShouldUpdateCountry_AndReturnAffectedRows_WhenCountryExists()

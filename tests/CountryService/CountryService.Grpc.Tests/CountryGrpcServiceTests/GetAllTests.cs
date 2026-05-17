@@ -1,6 +1,6 @@
 namespace CountryService.Grpc.Tests.CountryGrpcServiceTests;
 
-public class GetAllTests : CountryGrpcServiceTestsBase
+public sealed class GetAllTests : CountryGrpcServiceTestsBase
 {
     [Fact]
     public async Task ShouldWriteAllReplies_WhenCountriesExist()
@@ -19,11 +19,6 @@ public class GetAllTests : CountryGrpcServiceTestsBase
         await GrpcService.GetAll(new Empty(), responseStream, ServerCallContext);
 
         // Assert
-        responseStream.Messages.Should().HaveCount(countries.Length);
-        foreach (var country in countries)
-            responseStream.Messages.Should().ContainSingle(x =>
-                x.Id == country.Id
-                && x.Name == country.Name
-                && x.Description == country.Description);
+        responseStream.Messages.Should().BeEquivalentTo(countries);
     }
 }

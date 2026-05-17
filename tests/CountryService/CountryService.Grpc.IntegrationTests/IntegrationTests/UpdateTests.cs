@@ -1,6 +1,6 @@
 namespace CountryService.Grpc.IntegrationTests.IntegrationTests;
 
-public class UpdateTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsBase(fixture)
+public sealed class UpdateTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsBase(fixture)
 {
     [Fact]
     public async Task ShouldUpdateCountry_WhenCountryExists()

@@ -1,6 +1,6 @@
 namespace CountryWiki.DAL.Tests.CountryRepositoryTests;
 
-public class GetTests : CountryRepositoryTestsBase
+public sealed class GetTests : CountryRepositoryTestsBase
 {
     [Fact]
     public async Task ShouldReturnMappedCountry_WhenCountryExists()
@@ -26,13 +26,8 @@ public class GetTests : CountryRepositoryTestsBase
             Arg.Any<CancellationToken>());
 
         result.Should().NotBeNull();
-        result.Id.Should().Be(reply.Id);
-        result.Name.Should().Be(reply.Name);
-        result.Description.Should().Be(reply.Description);
-        result.FlagUri.Should().Be(reply.FlagUri);
-        result.Anthem.Should().Be(reply.Anthem);
-        result.CapitalCity.Should().Be(reply.CapitalCity);
-        result.Languages.Should().BeEquivalentTo(reply.Languages);
+        result.Should().BeEquivalentTo(reply, options => options
+            .ComparingByMembers<CountryReply>());
     }
 
     [Fact]

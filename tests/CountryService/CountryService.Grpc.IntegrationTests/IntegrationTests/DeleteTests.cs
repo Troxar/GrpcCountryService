@@ -1,6 +1,6 @@
 namespace CountryService.Grpc.IntegrationTests.IntegrationTests;
 
-public class DeleteTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsBase(fixture)
+public sealed class DeleteTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsBase(fixture)
 {
     [Fact]
     public async Task ShouldDeleteCountry_WhenCountryExists()

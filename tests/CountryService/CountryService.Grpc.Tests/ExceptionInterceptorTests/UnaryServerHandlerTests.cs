@@ -1,6 +1,6 @@
 namespace CountryService.Grpc.Tests.ExceptionInterceptorTests;
 
-public class UnaryServerHandlerTests : ExceptionInterceptorTestsBase
+public sealed class UnaryServerHandlerTests : ExceptionInterceptorTestsBase
 {
     private const string CorrelationId = "test-correlation-id";
     private readonly ServerCallContext _context = TestDataFactory.CreateServerCallContext(CorrelationId);

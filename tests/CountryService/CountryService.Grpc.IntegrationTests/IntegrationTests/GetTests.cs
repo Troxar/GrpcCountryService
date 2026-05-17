@@ -1,6 +1,6 @@
 namespace CountryService.Grpc.IntegrationTests.IntegrationTests;
 
-public class GetTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsBase(fixture)
+public sealed class GetTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsBase(fixture)
 {
     [Fact]
     public async Task ShouldReturnCountryReply_WhenCountryExists()
@@ -20,12 +20,7 @@ public class GetTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsB
         var reply = await Fixture.Client.GetAsync(request, cancellationToken: CancellationToken);
 
         // Assert
-        reply.Id.Should().Be(country.Id);
-        reply.Name.Should().Be(country.Name);
-        reply.Description.Should().Be(country.Description);
-        reply.FlagUri.Should().Be(country.FlagUri);
-        reply.CapitalCity.Should().Be(country.CapitalCity);
-        reply.Anthem.Should().Be(country.Anthem);
+        reply.Should().BeEquivalentTo(country, options => options.ExcludingMissingMembers());
         reply.Languages.Should().BeEquivalentTo("English", "French");
     }
 

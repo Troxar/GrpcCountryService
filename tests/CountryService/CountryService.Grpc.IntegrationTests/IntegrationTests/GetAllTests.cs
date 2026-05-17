@@ -1,6 +1,6 @@
 namespace CountryService.Grpc.IntegrationTests.IntegrationTests;
 
-public class GetAllTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsBase(fixture)
+public sealed class GetAllTests(CountryGrpcIntegrationFixture fixture) : IntegrationTestsBase(fixture)
 {
     [Fact]
     public async Task ShouldReturnAllCountries_WhenCountriesExist()
@@ -21,11 +21,6 @@ public class GetAllTests(CountryGrpcIntegrationFixture fixture) : IntegrationTes
             replies.Add(reply);
 
         // Assert
-        replies.Should().HaveCount(countries.Length);
-        foreach (var country in countries)
-            replies.Should().ContainSingle(x =>
-                x.Id == country.Id
-                && x.Name == country.Name
-                && x.Description == country.Description);
+        replies.Should().BeEquivalentTo(countries, options => options.ExcludingMissingMembers());
     }
 }

@@ -1,6 +1,6 @@
 namespace CountryWiki.DAL.Tests.CountryRepositoryTests;
 
-public class GetAllTests : CountryRepositoryTestsBase
+public sealed class GetAllTests : CountryRepositoryTestsBase
 {
     [Fact]
     public async Task ShouldReturnMappedCountries_WhenCountriesExist()
@@ -22,11 +22,7 @@ public class GetAllTests : CountryRepositoryTestsBase
         var result = await Repository.GetAllAsync().ToArrayAsync(TestContext.Current.CancellationToken);
 
         // Assert
-        result.Should().HaveCount(replies.Length);
-        foreach (var reply in replies)
-            result.Should().ContainSingle(x =>
-                x.Id == reply.Id
-                && x.Name == reply.Name
-                && x.Description == reply.Description);
+        result.Should().BeEquivalentTo(replies, options => options
+            .ComparingByMembers<CountryReply>());
     }
 }
