@@ -1,0 +1,14 @@
+global using System.Net.Mime;
+global using System.Text;
+global using CountryWiki.Domain.Models;
+global using CountryWiki.Domain.Services;
+global using CountryWiki.Web.Channels;
+global using CountryWiki.Web.Options;
+global using CountryWiki.Web.Pages;
+global using CountryWiki.Web.Tests.Infrastructure;
+global using FluentAssertions;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Mvc.RazorPages;
+global using NSubstitute;
+global using Xunit;
