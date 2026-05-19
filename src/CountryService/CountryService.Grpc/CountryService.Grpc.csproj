@@ -20,6 +20,7 @@
     <ItemGroup>
         <ProjectReference Include="..\CountryService.BLL\CountryService.BLL.csproj"/>
         <ProjectReference Include="..\CountryService.DAL\CountryService.DAL.csproj"/>
+        <ProjectReference Include="..\..\CountryShared\CountryShared.csproj"/>
     </ItemGroup>
     
     <ItemGroup>

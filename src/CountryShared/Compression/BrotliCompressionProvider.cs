@@ -1,4 +1,4 @@
-namespace CountryService.Grpc.Compression;
+namespace CountryShared.Compression;
 
 public class BrotliCompressionProvider : ICompressionProvider
 {
