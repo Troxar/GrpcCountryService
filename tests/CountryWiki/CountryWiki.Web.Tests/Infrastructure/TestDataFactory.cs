@@ -13,7 +13,7 @@ internal static class TestDataFactory
             ContentType = contentType
         };
     }
-    
+
     internal static CountryModel CreateCountryModel(int id)
     {
         return new CountryModel
@@ -27,7 +27,7 @@ internal static class TestDataFactory
             Languages = []
         };
     }
-    
+
     internal static CreateCountryModel CreateCreateCountryModel()
     {
         return new CreateCountryModel
@@ -38,6 +38,15 @@ internal static class TestDataFactory
             Anthem = Guid.NewGuid().ToString(),
             CapitalCity = Guid.NewGuid().ToString(),
             Languages = []
+        };
+    }
+
+    internal static UpdateCountry CreateUpdateCountry(int id)
+    {
+        return new UpdateCountry
+        {
+            Id = id,
+            Description = Guid.NewGuid().ToString()
         };
     }
 }
