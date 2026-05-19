@@ -9,15 +9,18 @@ builder.Services.AddScoped<IFileUploadValidatorService, FileUploadValidatorServi
 builder.Services.AddSingleton<ISyncCountriesChannel, SyncCountriesChannel>();
 builder.Services.AddHostedService<SyncUploadedCountriesBackgroundService>();
 builder.Services.AddSingleton(new GlobalOptions { ProcessingUpload = false });
+builder.Services.AddTransient<TracerInterceptor>();
 builder.Services.AddGrpcClient<CountryServiceClient>(options =>
-{
-    options.Address = new Uri(builder.Configuration.GetSection("CountryServiceUri").Value ?? string.Empty);
-}).ConfigureChannel(options =>
-{
-    options.CompressionProviders = new List<ICompressionProvider> { new BrotliCompressionProvider() };
-    options.MaxReceiveMessageSize = 1024 * 1024 * 6;
-    options.MaxSendMessageSize = 1024 * 1024 * 6;
-});
+    {
+        options.Address = new Uri(builder.Configuration.GetSection("CountryServiceUri").Value ?? string.Empty);
+    })
+    .AddInterceptor<TracerInterceptor>()
+    .ConfigureChannel(options =>
+    {
+        options.CompressionProviders = new List<ICompressionProvider> { new BrotliCompressionProvider() };
+        options.MaxReceiveMessageSize = 1024 * 1024 * 6;
+        options.MaxSendMessageSize = 1024 * 1024 * 6;
+    });
 
 var app = builder.Build();
 
