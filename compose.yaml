@@ -38,6 +38,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -fsS http://localhost:5080/health/ready || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
         
   countrywiki-web:
     build:
@@ -52,7 +58,14 @@ services:
     ports:
       - "5082:5082"
     depends_on:
-      - countryservice-grpc
+      countryservice-grpc:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -fsS http://localhost:5082/health/ready || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
         
 volumes:
   postgres_data:
