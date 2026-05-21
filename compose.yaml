@@ -39,5 +39,20 @@ services:
       postgres:
         condition: service_healthy
         
+  countrywiki-web:
+    build:
+      context: .
+      dockerfile: src/CountryWiki/CountryWiki.Web/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      
+      Kestrel__Endpoints__Http__Url: http://0.0.0.0:5082
+      
+      CountryServiceUri: http://countryservice-grpc:5076
+    ports:
+      - "5082:5082"
+    depends_on:
+      - countryservice-grpc
+        
 volumes:
   postgres_data:

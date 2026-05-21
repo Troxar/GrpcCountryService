@@ -7,6 +7,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY ["src/CountryContracts/", "CountryContracts/"]
+COPY ["src/CountryShared/CountryShared.csproj", "CountryShared/"]
 COPY ["src/CountryService/CountryService.Domain/CountryService.Domain.csproj", "CountryService/CountryService.Domain/"]
 COPY ["src/CountryService/CountryService.DAL/CountryService.DAL.csproj", "CountryService/CountryService.DAL/"]
 COPY ["src/CountryService/CountryService.BLL/CountryService.BLL.csproj", "CountryService/CountryService.BLL/"]
@@ -14,6 +15,7 @@ COPY ["src/CountryService/CountryService.Grpc/CountryService.Grpc.csproj", "Coun
 
 RUN dotnet restore "CountryService/CountryService.Grpc/CountryService.Grpc.csproj"
 
+COPY ["src/CountryShared/", "CountryShared/"]
 COPY ["src/CountryService/", "CountryService/"]
 
 WORKDIR "/src/CountryService/CountryService.Grpc"
