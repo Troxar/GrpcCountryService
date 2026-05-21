@@ -12,6 +12,7 @@ public class CountryWikiIntegrationFixture : IAsyncLifetime
 
     public CountryGrpcServiceFactory CountryGrpcServiceFactory { get; private set; } = null!;
     public HttpClient HttpClient { get; private set; } = null!;
+    public TestLoggerProvider LoggerProvider { get; } = new();
 
     public async ValueTask InitializeAsync()
     {
@@ -25,7 +26,8 @@ public class CountryWikiIntegrationFixture : IAsyncLifetime
             await context.Database.MigrateAsync();
         }
 
-        _countryWikiWebFactory = new CountryWikiWebFactory(CountryGrpcServiceFactory.Server.CreateHandler());
+        _countryWikiWebFactory =
+            new CountryWikiWebFactory(CountryGrpcServiceFactory.Server.CreateHandler(), LoggerProvider);
         HttpClient = _countryWikiWebFactory.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false

@@ -5,10 +5,12 @@ namespace CountryWiki.Web.IntegrationTests.Infrastructure;
 public sealed class CountryWikiWebFactory : WebApplicationFactory<IndexModel>
 {
     private readonly HttpMessageHandler _countryServiceHandler;
+    private readonly TestLoggerProvider _loggerProvider;
 
-    public CountryWikiWebFactory(HttpMessageHandler countryServiceHandler)
+    public CountryWikiWebFactory(HttpMessageHandler countryServiceHandler, TestLoggerProvider loggerProvider)
     {
         _countryServiceHandler = countryServiceHandler;
+        _loggerProvider = loggerProvider;
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -21,17 +23,25 @@ public sealed class CountryWikiWebFactory : WebApplicationFactory<IndexModel>
                 ["CountryServiceUri"] = "http://localhost"
             });
         });
+        builder.ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
+            logging.AddFilter(typeof(TracerInterceptor).FullName, LogLevel.Debug);
+            logging.AddProvider(_loggerProvider);
+        });
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll<CountryServiceClient>();
-            services.AddGrpcClient<CountryServiceClient>(options => options.Address = new Uri("https://localhost"))
+            services.AddGrpcClient<CountryServiceClient>(options => { options.Address = new Uri("http://localhost"); })
                 .ConfigurePrimaryHttpMessageHandler(() => _countryServiceHandler)
+                .AddInterceptor<TracerInterceptor>()
                 .ConfigureChannel(options =>
                 {
                     options.CompressionProviders = new List<ICompressionProvider>
                     {
                         new BrotliCompressionProvider()
                     };
+
                     options.MaxReceiveMessageSize = 1024 * 1024 * 6;
                     options.MaxSendMessageSize = 1024 * 1024 * 6;
                 });

@@ -26,4 +26,24 @@ public sealed class IndexPageTests(CountryWikiIntegrationFixture fixture) : Inte
             html.Should().Contain(country.Description);
         }
     }
+
+    [Fact]
+    public async Task ShouldLogGrpcCallThroughTracerInterceptor()
+    {
+        // Arrange
+        var country = TestDataFactory.CreateCountry();
+        await SeedCountriesAsync(country);
+
+        // Act
+        var response = await Fixture.HttpClient.GetAsync("/", CancellationToken);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        Fixture.LoggerProvider.Records.Should().Contain(record =>
+            record.CategoryName == typeof(TracerInterceptor).FullName
+            && record.Level == LogLevel.Debug
+            && record.Message.Contains(
+                "Executing GetAll ServerStreaming method on service CountryService.v1.CountryService"));
+    }
 }
