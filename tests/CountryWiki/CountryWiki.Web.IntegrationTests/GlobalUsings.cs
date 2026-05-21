@@ -1,0 +1,17 @@
+global using System.Net;
+global using CountryService.DAL.Database;
+global using CountryService.DAL.Database.Entities;
+global using CountryShared.Compression;
+global using CountryWiki.Web.IntegrationTests.Infrastructure;
+global using CountryWiki.Web.Pages;
+global using FluentAssertions;
+global using Grpc.Net.Compression;
+global using Microsoft.AspNetCore.Hosting;
+global using Microsoft.AspNetCore.Mvc.Testing;
+global using Microsoft.AspNetCore.TestHost;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.DependencyInjection.Extensions;
+global using Testcontainers.PostgreSql;
+global using Xunit;
