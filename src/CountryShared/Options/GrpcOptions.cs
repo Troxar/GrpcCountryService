@@ -7,4 +7,5 @@ public sealed class GrpcOptions
     public int MaxSendMessageSizeMb { get; init; } = 6;
     public int MaxReceiveMessageSize => MaxReceiveMessageSizeMb * 1024 * 1024;
     public int MaxSendMessageSize => MaxSendMessageSizeMb * 1024 * 1024;
+    public bool UseBrotliCompression { get; init; }
 }

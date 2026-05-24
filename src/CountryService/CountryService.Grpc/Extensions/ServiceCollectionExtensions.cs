@@ -46,9 +46,9 @@ public static class ServiceCollectionExtensions
         {
             services.AddGrpcHealthChecks(options =>
                 {
-                    options.Services.Map(string.Empty, registration => registration.Tags.Contains("ready"));
+                    options.Services.Map(string.Empty, context => context.Tags.Contains("ready"));
                     options.Services.Map(v1.CountryService.Descriptor.FullName,
-                        registration => registration.Tags.Contains("ready"));
+                        context => context.Tags.Contains("ready"));
                 })
                 .AddCheck("countryservice-self", () => HealthCheckResult.Healthy(), ["live"])
                 .AddDbContextCheck<CountryContext>("countryservice-db", tags: ["ready"]);

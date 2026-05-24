@@ -32,19 +32,15 @@ public sealed class CountryWikiWebFactory : WebApplicationFactory<IndexModel>
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll<CountryServiceClient>();
+            services.RemoveAll<Health.HealthClient>();
             services.AddGrpcClient<CountryServiceClient>(options => { options.Address = new Uri("http://localhost"); })
                 .ConfigurePrimaryHttpMessageHandler(() => _countryServiceHandler)
                 .AddInterceptor<TracerInterceptor>()
-                .ConfigureChannel(options =>
-                {
-                    options.CompressionProviders = new List<ICompressionProvider>
-                    {
-                        new BrotliCompressionProvider()
-                    };
+                .ConfigureChannel(options => { options.ConfigureGrpcChannel(useBrotliCompression: true); });
 
-                    options.MaxReceiveMessageSize = 1024 * 1024 * 6;
-                    options.MaxSendMessageSize = 1024 * 1024 * 6;
-                });
+            services.AddGrpcClient<Health.HealthClient>(options => { options.Address = new Uri("http://localhost"); })
+                .ConfigurePrimaryHttpMessageHandler(() => _countryServiceHandler)
+                .ConfigureChannel(options => { options.ConfigureGrpcChannel(); });
         });
     }
 }

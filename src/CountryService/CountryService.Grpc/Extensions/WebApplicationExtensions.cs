@@ -18,11 +18,11 @@ public static class WebApplicationExtensions
 
             app.MapHealthChecks("/health/live", new HealthCheckOptions
             {
-                Predicate = registration => registration.Tags.Contains("live")
+                Predicate = context => context.Tags.Contains("live")
             });
             app.MapHealthChecks("/health/ready", new HealthCheckOptions
             {
-                Predicate = registration => registration.Tags.Contains("ready")
+                Predicate = context => context.Tags.Contains("ready")
             });
             app.MapGrpcHealthChecksService();
 

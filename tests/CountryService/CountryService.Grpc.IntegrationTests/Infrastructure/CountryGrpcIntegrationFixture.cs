@@ -2,7 +2,7 @@ namespace CountryService.Grpc.IntegrationTests.Infrastructure;
 
 public class CountryGrpcIntegrationFixture : IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:16-alpine")
+    public readonly PostgreSqlContainer Postgres = new PostgreSqlBuilder("postgres:16-alpine")
         .WithDatabase("CountryServiceGrpcTests")
         .WithUsername("postgres")
         .WithPassword("secretpassword")
@@ -14,9 +14,9 @@ public class CountryGrpcIntegrationFixture : IAsyncLifetime
 
     public async ValueTask InitializeAsync()
     {
-        await _postgres.StartAsync();
+        await Postgres.StartAsync();
 
-        Factory = new CountryGrpcWebApplicationFactory(_postgres.GetConnectionString());
+        Factory = new CountryGrpcWebApplicationFactory(Postgres.GetConnectionString());
 
         await using var scope = Factory.Services.CreateAsyncScope();
         var context = scope.ServiceProvider.GetRequiredService<CountryContext>();
@@ -26,19 +26,15 @@ public class CountryGrpcIntegrationFixture : IAsyncLifetime
         ResponseHeadersCaptureHandler = new ResponseHeadersCaptureHandler(Factory.Server.CreateHandler());
         var channel = GrpcChannel.ForAddress("https://localhost", new GrpcChannelOptions
         {
-            HttpHandler = ResponseHeadersCaptureHandler,
-            CompressionProviders = new List<ICompressionProvider>
-            {
-                new BrotliCompressionProvider()
-            }
-        });
+            HttpHandler = ResponseHeadersCaptureHandler
+        }.ConfigureGrpcChannel(useBrotliCompression: true));
         Client = new v1.CountryService.CountryServiceClient(channel);
     }
 
     public async ValueTask DisposeAsync()
     {
         await Factory.DisposeAsync();
-        await _postgres.DisposeAsync();
+        await Postgres.DisposeAsync();
     }
 
     public async Task ResetDatabaseAsync()

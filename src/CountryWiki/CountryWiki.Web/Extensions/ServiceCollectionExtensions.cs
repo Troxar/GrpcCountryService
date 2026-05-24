@@ -37,19 +37,10 @@ public static class ServiceCollectionExtensions
 
             services.AddGrpcClient<CountryServiceClient>(options => { options.Address = new Uri(countryServiceUri); })
                 .AddInterceptor<TracerInterceptor>()
-                .ConfigureChannel(options =>
-                {
-                    options.CompressionProviders = new List<ICompressionProvider> { new BrotliCompressionProvider() };
-                    options.MaxReceiveMessageSize = grpcOptions.MaxReceiveMessageSize;
-                    options.MaxSendMessageSize = grpcOptions.MaxSendMessageSize;
-                });
+                .ConfigureChannel(options => { options.ConfigureGrpcChannel(grpcOptions, grpcOptions.UseBrotliCompression); });
 
             services.AddGrpcClient<Health.HealthClient>(options => { options.Address = new Uri(countryServiceUri); })
-                .ConfigureChannel(options =>
-                {
-                    options.MaxReceiveMessageSize = grpcOptions.MaxReceiveMessageSize;
-                    options.MaxSendMessageSize = grpcOptions.MaxSendMessageSize;
-                });
+                .ConfigureChannel(options => { options.ConfigureGrpcChannel(grpcOptions); });
 
             return services;
         }

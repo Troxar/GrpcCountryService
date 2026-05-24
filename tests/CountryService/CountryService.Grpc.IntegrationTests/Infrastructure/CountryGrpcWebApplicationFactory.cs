@@ -9,6 +9,14 @@ public sealed class CountryGrpcWebApplicationFactory : WebApplicationFactory<Pro
         _connectionString = connectionString;
     }
 
+    public GrpcChannel CreateGrpcChannel()
+    {
+        return GrpcChannel.ForAddress("https://localhost", new GrpcChannelOptions
+        {
+            HttpHandler = Server.CreateHandler()
+        }.ConfigureGrpcChannel());
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
