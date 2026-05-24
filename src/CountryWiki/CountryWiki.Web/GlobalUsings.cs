@@ -12,6 +12,8 @@ global using CountryWiki.Web.Interceptors;
 global using CountryWiki.Web.Models;
 global using CountryWiki.Web.Options;
 global using CountryShared.Compression;
+global using CountryShared.Options;
+global using CountryWiki.Web.Extensions;
 global using CountryWiki.Web.HealthChecks;
 global using Grpc.Core;
 global using Grpc.Core.Interceptors;

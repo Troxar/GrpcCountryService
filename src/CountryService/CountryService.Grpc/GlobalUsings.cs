@@ -11,6 +11,7 @@ global using CountryService.Grpc.Mappers;
 global using CountryService.Grpc.Services;
 global using CountryService.Grpc.v1;
 global using CountryShared.Compression;
+global using CountryShared.Options;
 global using Google.Protobuf.WellKnownTypes;
 global using Grpc.Core;
 global using Grpc.Core.Interceptors;
