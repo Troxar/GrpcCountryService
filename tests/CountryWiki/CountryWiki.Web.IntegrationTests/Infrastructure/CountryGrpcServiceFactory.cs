@@ -19,7 +19,8 @@ public sealed class CountryGrpcServiceFactory : WebApplicationFactory<CountryGrp
         {
             configurationBuilder.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ConnectionStrings:CountryService"] = _connectionString
+                ["ConnectionStrings:CountryService"] = _connectionString,
+                ["Database:ApplyMigrationsOnStartup"] = "false"
             });
         });
         builder.ConfigureTestServices(services =>

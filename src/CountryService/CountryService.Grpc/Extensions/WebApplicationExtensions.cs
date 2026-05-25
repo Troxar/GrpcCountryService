@@ -4,11 +4,15 @@ public static class WebApplicationExtensions
 {
     extension(WebApplication app)
     {
-        public void ApplyMigrations()
+        public async Task ApplyMigrationsIfConfiguredAsync()
         {
-            using var scope = app.Services.CreateScope();
+            var options = app.Services.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+            if (!options.ApplyMigrationsOnStartup)
+                return;
+
+            await using var scope = app.Services.CreateAsyncScope();
             var countryContext = scope.ServiceProvider.GetRequiredService<CountryContext>();
-            countryContext.Database.Migrate();
+            await countryContext.Database.MigrateAsync();
         }
 
         public void MapCountryServiceEndpoints()

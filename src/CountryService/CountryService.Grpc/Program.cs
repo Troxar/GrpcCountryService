@@ -1,13 +1,13 @@
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCountryServiceGrpc(builder.Configuration, builder.Environment)
-    .AddDbContext<CountryContext>()
+    .AddCountryServiceDatabase(builder.Configuration)
     .AddCountryServices()
     .AddCountryServiceHealthChecks();
 
 var app = builder.Build();
 
-app.ApplyMigrations();
+await app.ApplyMigrationsIfConfiguredAsync();
 app.MapCountryServiceEndpoints();
 
-app.Run();
+await app.RunAsync();
