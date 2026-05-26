@@ -19,7 +19,7 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         // Assert
         result.Should().BeOfType<PageResult>();
 
-        IndexModel.UploadErrorMessage.Should().Be("File is missing");
+        IndexModel.ErrorMessage.Should().Be("File is missing");
         IndexModel.Countries.Should().BeEquivalentTo(countries);
         FileUploadValidatorService.DidNotReceive().ValidateFile(Arg.Any<UploadedFileModel>());
 
@@ -50,7 +50,7 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         // Assert
         result.Should().BeOfType<PageResult>();
 
-        IndexModel.UploadErrorMessage.Should().Be("Only JSON files are allowed");
+        IndexModel.ErrorMessage.Should().Be("Only JSON files are allowed");
         IndexModel.Countries.Should().BeEquivalentTo(countries);
         FileUploadValidatorService.Received(1).ValidateFile(Arg.Is<UploadedFileModel>(x =>
             x.FileName == "countries.txt"
@@ -81,7 +81,7 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         // Assert
         result.Should().BeOfType<PageResult>();
 
-        IndexModel.UploadErrorMessage.Should().Be("Cannot parse the file or the file is empty");
+        IndexModel.ErrorMessage.Should().Be("Cannot parse the file or the file is empty");
         IndexModel.Countries.Should().BeEquivalentTo(countries);
         FileUploadValidatorService.Received(1).ValidateFile(Arg.Is<UploadedFileModel>(x =>
             x.FileName == "countries.json"
@@ -120,10 +120,34 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
         redirectResult.PageName.Should().Be("./Index");
 
-        IndexModel.UploadErrorMessage.Should().BeEmpty();
+        IndexModel.ErrorMessage.Should().BeEmpty();
 
         await SyncCountriesChannel.Received(1)
             .SyncAsync(Arg.Is<IEnumerable<CreateCountryModel>>(x => x.SequenceEqual(countries)), CancellationToken);
         await CountryService.DidNotReceive().GetAllAsync();
+    }
+
+    [Fact]
+    public async Task ShouldKeepUploadError_WhenReloadingCountriesFails()
+    {
+        // Arrange
+        CountryService.GetAllAsync().Returns<IEnumerable<CountryModel>>(_ =>
+            throw new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable, Guid.NewGuid().ToString()));
+        IndexModel.Upload = null;
+
+        // Act
+        var result = await IndexModel.OnPostUploadAsync(CancellationToken.None);
+
+        // Assert
+        result.Should().BeOfType<PageResult>();
+
+        IndexModel.ErrorMessage.Should().Be("File is missing");
+        IndexModel.Countries.Should().BeEmpty();
+        FileUploadValidatorService.DidNotReceive().ValidateFile(Arg.Any<UploadedFileModel>());
+
+        await CountryService.Received(1).GetAllAsync();
+        await FileUploadValidatorService.DidNotReceive().ParseFileAsync(Arg.Any<Stream>());
+        await SyncCountriesChannel.DidNotReceive()
+            .SyncAsync(Arg.Any<IEnumerable<CreateCountryModel>>(), Arg.Any<CancellationToken>());
     }
 }

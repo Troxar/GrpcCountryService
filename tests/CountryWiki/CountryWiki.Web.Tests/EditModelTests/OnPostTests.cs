@@ -28,7 +28,8 @@ public sealed class OnPostTests : EditModelTestsBase
     {
         // Arrange
         var country = TestDataFactory.CreateCountryModel(1);
-        EditModel.CountryToUpdate = TestDataFactory.CreateUpdateCountry(country.Id);
+        var countryToUpdate = TestDataFactory.CreateUpdateCountry(country.Id);
+        EditModel.CountryToUpdate = countryToUpdate;
         const string propertyName = nameof(UpdateCountry.Description);
         EditModel.ModelState.AddModelError(propertyName, $"{propertyName} is required");
         CountryService.GetAsync(country.Id).Returns(country);
@@ -40,7 +41,7 @@ public sealed class OnPostTests : EditModelTestsBase
         result.Should().BeOfType<PageResult>();
 
         EditModel.CountryName.Should().Be(country.Name);
-        EditModel.CountryToUpdate.Should().BeEquivalentTo(country, options => options.ExcludingMissingMembers());
+        EditModel.CountryToUpdate.Should().BeEquivalentTo(countryToUpdate);
 
         await CountryService.Received(1).GetAsync(country.Id);
         await CountryService.DidNotReceive().UpdateAsync(Arg.Any<UpdateCountryModel>());
@@ -60,9 +61,28 @@ public sealed class OnPostTests : EditModelTestsBase
         var result = await EditModel.OnPostAsync();
 
         // Assert
-        result.Should().BeOfType<PageResult>();
+        result.Should().BeOfType<NotFoundResult>();
+    }
 
-        EditModel.CountryName.Should().BeEmpty();
+    [Fact]
+    public async Task ShouldRedirectToError_WhenModelStateIsInvalid_AndCountryServiceFails()
+    {
+        // Arrange
+        var countryToUpdate = TestDataFactory.CreateUpdateCountry(1);
+        EditModel.CountryToUpdate = countryToUpdate;
+        const string propertyName = nameof(UpdateCountry.Description);
+        EditModel.ModelState.AddModelError(propertyName, $"{propertyName} is required");
+        var exceptionMessage = Guid.NewGuid().ToString();
+        CountryService.GetAsync(countryToUpdate.Id).Returns<CountryModel?>(_ =>
+            throw new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable, exceptionMessage));
+
+        // Act
+        var result = await EditModel.OnPostAsync();
+
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
+        redirectResult.PageName.Should().Be("/Error");
+        redirectResult.RouteValues.Should().ContainKey("message").WhoseValue.Should().Be(exceptionMessage);
         EditModel.CountryToUpdate.Should().BeEquivalentTo(countryToUpdate);
 
         await CountryService.Received(1).GetAsync(countryToUpdate.Id);

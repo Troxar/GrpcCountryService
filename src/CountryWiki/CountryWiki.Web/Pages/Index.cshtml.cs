@@ -8,7 +8,7 @@ public class IndexModel : PageModel
 
     public GlobalOptions GlobalOptions { get; set; }
     public IEnumerable<CountryModel> Countries { get; set; } = new List<CountryModel>();
-    public string UploadErrorMessage { get; set; } = string.Empty;
+    public string ErrorMessage { get; set; } = string.Empty;
 
     [BindProperty]
     public IFormFile? Upload { get; set; }
@@ -24,7 +24,7 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        Countries = await _countryService.GetAllAsync();
+        await LoadCountriesAsync();
     }
 
     public async Task<IActionResult> OnPostUploadAsync(CancellationToken cancellationToken)
@@ -53,14 +53,42 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnPostDeleteAsync(int id)
     {
-        await _countryService.DeleteAsync(id);
-        return RedirectToPage("./Index");
+        try
+        {
+            await _countryService.DeleteAsync(id);
+            return RedirectToPage("./Index");
+        }
+        catch (CountryServiceException exception)
+        {
+            SetErrorMessage(exception.Message);
+            await LoadCountriesAsync();
+            return Page();
+        }
     }
 
     private async Task<PageResult> HandleFileValidationAsync(string errorMessage)
     {
-        UploadErrorMessage = errorMessage;
-        Countries = await _countryService.GetAllAsync();
+        SetErrorMessage(errorMessage);
+        await LoadCountriesAsync();
         return Page();
+    }
+
+    private async Task LoadCountriesAsync()
+    {
+        try
+        {
+            Countries = await _countryService.GetAllAsync();
+        }
+        catch (CountryServiceException exception)
+        {
+            SetErrorMessage(exception.Message);
+            Countries = [];
+        }
+    }
+
+    private void SetErrorMessage(string errorMessage)
+    {
+        if (string.IsNullOrWhiteSpace(ErrorMessage))
+            ErrorMessage = errorMessage;
     }
 }

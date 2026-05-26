@@ -10,9 +10,10 @@ public sealed class OnGetTests : EditModelTestsBase
         CountryService.GetAsync(country.Id).Returns(country);
 
         // Act
-        await EditModel.OnGetAsync(country.Id);
+        var result = await EditModel.OnGetAsync(country.Id);
 
         // Assert
+        result.Should().BeOfType<PageResult>();
         EditModel.CountryName.Should().Be(country.Name);
         EditModel.CountryToUpdate.Should().BeEquivalentTo(country, options => options.ExcludingMissingMembers());
 
@@ -27,12 +28,33 @@ public sealed class OnGetTests : EditModelTestsBase
         CountryService.GetAsync(countryId).Returns((CountryModel?)null);
 
         // Act
-        await EditModel.OnGetAsync(countryId);
+        var result = await EditModel.OnGetAsync(countryId);
 
         // Assert
+        result.Should().BeOfType<NotFoundResult>();
         EditModel.CountryName.Should().BeEmpty();
         EditModel.CountryToUpdate.Id.Should().Be(0);
         EditModel.CountryToUpdate.Description.Should().BeNullOrEmpty();
+
+        await CountryService.Received(1).GetAsync(countryId);
+    }
+
+    [Fact]
+    public async Task ShouldRedirectToError_WhenCountryServiceFails()
+    {
+        // Arrange
+        const int countryId = 1;
+        var exceptionMessage = Guid.NewGuid().ToString();
+        CountryService.GetAsync(countryId).Returns<CountryModel?>(_ =>
+            throw new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable, exceptionMessage));
+
+        // Act
+        var result = await EditModel.OnGetAsync(countryId);
+
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
+        redirectResult.PageName.Should().Be("/Error");
+        redirectResult.RouteValues.Should().ContainKey("message").WhoseValue.Should().Be(exceptionMessage);
 
         await CountryService.Received(1).GetAsync(countryId);
     }

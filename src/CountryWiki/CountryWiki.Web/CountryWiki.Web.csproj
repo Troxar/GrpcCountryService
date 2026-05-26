@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Grpc.Core.Api" Version="2.80.0" />
         <PackageReference Include="Grpc.HealthCheck" Version="2.80.0" />
+        <PackageReference Include="Scrutor" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>

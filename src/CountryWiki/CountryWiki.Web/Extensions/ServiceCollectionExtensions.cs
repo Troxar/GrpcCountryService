@@ -17,7 +17,8 @@ public static class ServiceCollectionExtensions
         public IServiceCollection AddCountryWikiServices()
         {
             services.AddScoped<ICountryRepository, CountryRepository>();
-            services.AddScoped<ICountryService, BLL.Services.CountryService>();
+            services.AddScoped<ICountryService, BLL.Services.CountryService.CountryService>();
+            services.Decorate<ICountryService, GrpcExceptionCountryServiceDecorator>();
             services.AddScoped<IFileUploadValidatorService, FileUploadValidatorService>();
             services.AddSingleton<ISyncCountriesChannel, SyncCountriesChannel>();
             services.AddHostedService<SyncUploadedCountriesBackgroundService>();
@@ -37,7 +38,10 @@ public static class ServiceCollectionExtensions
 
             services.AddGrpcClient<CountryServiceClient>(options => { options.Address = new Uri(countryServiceUri); })
                 .AddInterceptor<TracerInterceptor>()
-                .ConfigureChannel(options => { options.ConfigureGrpcChannel(grpcOptions, grpcOptions.UseBrotliCompression); });
+                .ConfigureChannel(options =>
+                {
+                    options.ConfigureGrpcChannel(grpcOptions, grpcOptions.UseBrotliCompression);
+                });
 
             services.AddGrpcClient<Health.HealthClient>(options => { options.Address = new Uri(countryServiceUri); })
                 .ConfigureChannel(options => { options.ConfigureGrpcChannel(grpcOptions); });

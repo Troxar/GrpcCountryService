@@ -14,40 +14,54 @@ public class EditModel : PageModel
         _countryService = countryService;
     }
 
-    public async Task OnGetAsync(int id)
+    public async Task<IActionResult> OnGetAsync(int id)
     {
-        await RetrieveCountryAsync(id);
+        return await LoadCountryPageAsync(id);
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
+            return await LoadCountryPageAsync(CountryToUpdate.Id, false);
+
+        try
         {
-            await RetrieveCountryAsync(CountryToUpdate.Id);
-            return Page();
+            var model = new UpdateCountryModel
+            {
+                Id = CountryToUpdate.Id,
+                Description = CountryToUpdate.Description
+            };
+            await _countryService.UpdateAsync(model);
+
+            return RedirectToPage("./Index");
         }
-
-        var model = new UpdateCountryModel
+        catch (CountryServiceException exception)
         {
-            Id = CountryToUpdate.Id,
-            Description = CountryToUpdate.Description
-        };
-        await _countryService.UpdateAsync(model);
-
-        return RedirectToPage("./Index");
+            return this.ToActionResult(exception);
+        }
     }
 
-    private async Task RetrieveCountryAsync(int id)
+    private async Task<IActionResult> LoadCountryPageAsync(int id, bool updateCountryToUpdate = true)
     {
-        var country = await _countryService.GetAsync(id);
-        if (country is null)
-            return;
-
-        CountryName = country.Name;
-        CountryToUpdate = new UpdateCountry
+        try
         {
-            Id = country.Id,
-            Description = country.Description
-        };
+            var country = await _countryService.GetAsync(id);
+            if (country is null)
+                return NotFound();
+
+            CountryName = country.Name;
+            if (updateCountryToUpdate)
+                CountryToUpdate = new UpdateCountry
+                {
+                    Id = country.Id,
+                    Description = country.Description
+                };
+
+            return Page();
+        }
+        catch (CountryServiceException exception)
+        {
+            return this.ToActionResult(exception);
+        }
     }
 }

@@ -1,5 +1,6 @@
 global using System.Net.Mime;
 global using System.Text;
+global using CountryWiki.BLL.Errors;
 global using CountryWiki.Domain.Models;
 global using CountryWiki.Domain.Services;
 global using CountryWiki.Web.Channels;

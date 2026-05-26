@@ -20,4 +20,21 @@ public sealed class OnGetTests : IndexModelTestsBase
         IndexModel.Countries.Should().BeEquivalentTo(countries);
         await CountryService.Received(1).GetAllAsync();
     }
+
+    [Fact]
+    public async Task ShouldSetErrorMessage_WhenCountryServiceFails()
+    {
+        // Arrange
+        var exceptionMessage = Guid.NewGuid().ToString();
+        CountryService.GetAllAsync().Returns<IEnumerable<CountryModel>>(_ =>
+            throw new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable, exceptionMessage));
+
+        // Act
+        await IndexModel.OnGetAsync();
+
+        // Assert
+        IndexModel.ErrorMessage.Should().Be(exceptionMessage);
+        IndexModel.Countries.Should().BeEmpty();
+        await CountryService.Received(1).GetAllAsync();
+    }
 }

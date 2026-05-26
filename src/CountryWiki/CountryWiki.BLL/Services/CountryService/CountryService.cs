@@ -1,4 +1,4 @@
-namespace CountryWiki.BLL.Services;
+namespace CountryWiki.BLL.Services.CountryService;
 
 public class CountryService : ICountryService
 {
