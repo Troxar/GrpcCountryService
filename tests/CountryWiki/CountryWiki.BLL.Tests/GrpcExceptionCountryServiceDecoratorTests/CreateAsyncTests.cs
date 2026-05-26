@@ -11,10 +11,10 @@ public sealed class CreateAsyncTests : GrpcExceptionCountryServiceDecoratorTests
             TestDataFactory.CreateCreateCountryModel()
         };
         var rpcException = TestDataFactory.CreateRpcException(StatusCode.InvalidArgument);
-        Inner.CreateAsync(countriesToCreate).Returns(Task.FromException(rpcException));
+        Inner.CreateAsync(countriesToCreate, Arg.Any<CancellationToken>()).Returns(Task.FromException(rpcException));
 
         // Act
-        var act = async () => await Decorator.CreateAsync(countriesToCreate);
+        var act = async () => await Decorator.CreateAsync(countriesToCreate, CancellationToken);
 
         // Assert
         var exception = await act.Should().ThrowAsync<CountryServiceException>();

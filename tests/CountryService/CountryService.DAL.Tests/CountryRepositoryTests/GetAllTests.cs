@@ -19,7 +19,7 @@ public sealed class GetAllTests(PostgreSqlFixture fixture) : CountryRepositoryTe
         await context.SaveChangesAsync(CancellationToken);
 
         // Act
-        var result = await repository.GetAllAsync();
+        var result = await repository.GetAllAsync(CancellationToken);
 
         // Assert
         result.Should().BeEquivalentTo(countries, options => options.ExcludingMissingMembers());

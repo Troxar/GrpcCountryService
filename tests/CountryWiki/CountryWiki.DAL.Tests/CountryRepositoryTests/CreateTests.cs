@@ -12,12 +12,8 @@ public sealed class CreateTests : CountryRepositoryTestsBase
             TestDataFactory.CreateCreateCountryModel()
         };
         var requestStream = new TestClientStreamWriter<CountryCreateRequest>();
-        var replies = countriesToCreate.Select((x, i) => TestDataFactory.CreateCountryCreateReply(i, x.Name))
-            .ToArray();
-
-        Client.Create(Arg.Any<Metadata?>(),
-                Arg.Any<DateTime?>(),
-                Arg.Any<CancellationToken>())
+        var replies = countriesToCreate.Select((x, i) => TestDataFactory.CreateCountryCreateReply(i, x.Name)).ToArray();
+        Client.Create(Arg.Any<Metadata?>(), Arg.Any<DateTime?>(), Arg.Any<CancellationToken>())
             .Returns(TestDataFactory.CreateDuplexStreamingCall(requestStream, replies));
 
 
@@ -28,7 +24,7 @@ public sealed class CreateTests : CountryRepositoryTestsBase
         // Assert
         requestStream.IsCompleted.Should().BeTrue();
         requestStream.Messages.Should().BeEquivalentTo(countriesToCreate);
-        
+
         result.Should().BeEquivalentTo(replies, options => options
             .ComparingByMembers<CountryCreateReply>());
     }

@@ -8,10 +8,10 @@ public sealed class UpdateAsyncTests : GrpcExceptionCountryServiceDecoratorTests
         // Arrange
         var countryToUpdate = TestDataFactory.CreateUpdateCountryModel(10);
         var rpcException = TestDataFactory.CreateRpcException(StatusCode.DeadlineExceeded);
-        Inner.UpdateAsync(countryToUpdate).Returns(Task.FromException(rpcException));
+        Inner.UpdateAsync(countryToUpdate, Arg.Any<CancellationToken>()).Returns(Task.FromException(rpcException));
 
         // Act
-        var act = async () => await Decorator.UpdateAsync(countryToUpdate);
+        var act = async () => await Decorator.UpdateAsync(countryToUpdate, CancellationToken);
 
         // Assert
         var exception = await act.Should().ThrowAsync<CountryServiceException>();

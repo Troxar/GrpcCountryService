@@ -17,7 +17,7 @@ public sealed class UpdateTests(PostgreSqlFixture fixture) : CountryRepositoryTe
         var model = TestDataFactory.UpdateCountryModel(country.Id);
 
         // Act
-        var affectedRows = await repository.UpdateAsync(model);
+        var affectedRows = await repository.UpdateAsync(model, CancellationToken);
 
         // Assert
         affectedRows.Should().Be(1);
@@ -40,7 +40,7 @@ public sealed class UpdateTests(PostgreSqlFixture fixture) : CountryRepositoryTe
         var model = TestDataFactory.UpdateCountryModel(999);
 
         // Act
-        var affectedRows = await repository.UpdateAsync(model);
+        var affectedRows = await repository.UpdateAsync(model, CancellationToken);
 
         // Assert
         affectedRows.Should().Be(0);

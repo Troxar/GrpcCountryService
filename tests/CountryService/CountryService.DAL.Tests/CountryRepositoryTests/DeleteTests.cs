@@ -15,7 +15,7 @@ public sealed class DeleteTests(PostgreSqlFixture fixture) : CountryRepositoryTe
         await context.SaveChangesAsync(CancellationToken);
 
         // Act
-        var affectedRows = await repository.DeleteAsync(country.Id);
+        var affectedRows = await repository.DeleteAsync(country.Id, CancellationToken);
 
         // Assert
         affectedRows.Should().Be(1);
@@ -25,17 +25,17 @@ public sealed class DeleteTests(PostgreSqlFixture fixture) : CountryRepositoryTe
             .AnyAsync(x => x.Id == country.Id, CancellationToken);
         exists.Should().BeFalse();
     }
-    
+
     [Fact]
     public async Task ShouldReturnZero_WhenCountryDoesNotExist()
     {
         // Arrange
         await using var context = Fixture.CreateContext();
-        
+
         var repository = new CountryRepository(context);
 
         // Act
-        var affectedRows = await repository.DeleteAsync(999);
+        var affectedRows = await repository.DeleteAsync(999, CancellationToken);
 
         // Assert
         affectedRows.Should().Be(0);

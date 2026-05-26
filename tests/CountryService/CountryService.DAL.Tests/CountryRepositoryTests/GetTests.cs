@@ -20,7 +20,7 @@ public sealed class GetTests(PostgreSqlFixture fixture) : CountryRepositoryTests
         await context.SaveChangesAsync(CancellationToken);
 
         // Act
-        var result = await repository.GetAsync(country.Id);
+        var result = await repository.GetAsync(country.Id, CancellationToken);
 
         // Assert
         result.Should().NotBeNull();
@@ -37,7 +37,7 @@ public sealed class GetTests(PostgreSqlFixture fixture) : CountryRepositoryTests
         var repository = new CountryRepository(context);
 
         // Act
-        var result = await repository.GetAsync(999);
+        var result = await repository.GetAsync(999, CancellationToken);
 
         // Assert
         result.Should().BeNull();

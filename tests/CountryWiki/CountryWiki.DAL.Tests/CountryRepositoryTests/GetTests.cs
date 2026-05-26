@@ -8,26 +8,18 @@ public sealed class GetTests : CountryRepositoryTestsBase
         // Arrange
         var reply = TestDataFactory.CreateCountryReply(1);
         reply.Languages.AddRange(["English", "French"]);
-
-        Client.GetAsync(Arg.Any<CountryIdRequest>(),
-                Arg.Any<Metadata?>(),
-                Arg.Any<DateTime?>(),
-                Arg.Any<CancellationToken>())
-            .Returns(TestDataFactory.CreateUnaryCall(reply));
+        Client.GetAsync(Arg.Any<CountryIdRequest>(), Arg.Any<Metadata?>(), Arg.Any<DateTime?>(),
+            Arg.Any<CancellationToken>()).Returns(TestDataFactory.CreateUnaryCall(reply));
 
         // Act
-        var result = await Repository.GetAsync(reply.Id);
+        var result = await Repository.GetAsync(reply.Id, CancellationToken);
 
         // Assert
-        _ = Client.Received(1).GetAsync(
-            Arg.Is<CountryIdRequest>(x => x.Id == reply.Id),
-            Arg.Any<Metadata?>(),
-            Arg.Any<DateTime?>(),
-            Arg.Any<CancellationToken>());
+        _ = Client.Received(1).GetAsync(Arg.Is<CountryIdRequest>(x => x.Id == reply.Id), Arg.Any<Metadata?>(),
+            Arg.Any<DateTime?>(), Arg.Any<CancellationToken>());
 
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(reply, options => options
-            .ComparingByMembers<CountryReply>());
+        result.Should().BeEquivalentTo(reply, options => options.ComparingByMembers<CountryReply>());
     }
 
     [Fact]
@@ -36,16 +28,11 @@ public sealed class GetTests : CountryRepositoryTestsBase
         // Arrange
         var status = new Status(StatusCode.NotFound, "Country has not been found");
         var rpcException = new RpcException(status);
-
-        Client.GetAsync(
-                Arg.Any<CountryIdRequest>(),
-                Arg.Any<Metadata?>(),
-                Arg.Any<DateTime?>(),
-                Arg.Any<CancellationToken>())
-            .Returns(TestDataFactory.CreateFailedUnaryCall<CountryReply>(rpcException));
+        Client.GetAsync(Arg.Any<CountryIdRequest>(), Arg.Any<Metadata?>(), Arg.Any<DateTime?>(),
+            Arg.Any<CancellationToken>()).Returns(TestDataFactory.CreateFailedUnaryCall<CountryReply>(rpcException));
 
         // Act
-        var act = async () => await Repository.GetAsync(999);
+        var act = async () => await Repository.GetAsync(999, CancellationToken);
 
         // Assert
         var exception = await act.Should().ThrowAsync<RpcException>();

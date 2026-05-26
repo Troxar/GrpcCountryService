@@ -8,10 +8,10 @@ public sealed class DeleteAsyncTests : GrpcExceptionCountryServiceDecoratorTests
         // Arrange
         const int countryId = 10;
         var rpcException = TestDataFactory.CreateRpcException(StatusCode.Internal);
-        Inner.DeleteAsync(countryId).Returns(Task.FromException(rpcException));
+        Inner.DeleteAsync(countryId, Arg.Any<CancellationToken>()).Returns(Task.FromException(rpcException));
 
         // Act
-        var act = async () => await Decorator.DeleteAsync(countryId);
+        var act = async () => await Decorator.DeleteAsync(countryId, CancellationToken);
 
         // Assert
         var exception = await act.Should().ThrowAsync<CountryServiceException>();

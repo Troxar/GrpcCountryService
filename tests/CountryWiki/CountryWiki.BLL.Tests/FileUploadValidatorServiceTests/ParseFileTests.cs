@@ -3,6 +3,7 @@ namespace CountryWiki.BLL.Tests.FileUploadValidatorServiceTests;
 public sealed class ParseFileTests
 {
     private readonly FileUploadValidatorService _service = new();
+    private readonly CancellationToken _cancellationToken = TestContext.Current.CancellationToken;
 
     private static readonly JsonSerializerOptions UpperCaseJsonOptions = new()
     {
@@ -23,7 +24,7 @@ public sealed class ParseFileTests
         await using var stream = CreateStream(json);
 
         // Act
-        var result = await _service.ParseFileAsync(stream);
+        var result = await _service.ParseFileAsync(stream, _cancellationToken);
 
         // Assert
         var resultModels = result.ToArray();
@@ -43,7 +44,7 @@ public sealed class ParseFileTests
         await using var stream = CreateStream(json);
 
         // Act
-        var result = await _service.ParseFileAsync(stream);
+        var result = await _service.ParseFileAsync(stream, _cancellationToken);
 
         // Assert
         var country = result.Should().ContainSingle().Subject;
@@ -60,7 +61,7 @@ public sealed class ParseFileTests
         await using var stream = CreateStream(json);
 
         // Act
-        var result = await _service.ParseFileAsync(stream);
+        var result = await _service.ParseFileAsync(stream, _cancellationToken);
 
         // Assert
         result.Should().BeEmpty();
@@ -73,7 +74,7 @@ public sealed class ParseFileTests
         await using var stream = CreateStream("null");
 
         // Act
-        var result = await _service.ParseFileAsync(stream);
+        var result = await _service.ParseFileAsync(stream, _cancellationToken);
 
         // Assert
         result.Should().BeEmpty();

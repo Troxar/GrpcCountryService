@@ -11,18 +11,13 @@ public sealed class GetAllTests : CountryRepositoryTestsBase
             TestDataFactory.CreateCountryReply(1),
             TestDataFactory.CreateCountryReply(2)
         };
-
-        Client.GetAll(Arg.Any<Empty>(),
-                Arg.Any<Metadata?>(),
-                Arg.Any<DateTime?>(),
-                Arg.Any<CancellationToken>())
+        Client.GetAll(Arg.Any<Empty>(), Arg.Any<Metadata?>(), Arg.Any<DateTime?>(), Arg.Any<CancellationToken>())
             .Returns(TestDataFactory.CreateServerStreamingCall(replies));
 
         // Act
-        var result = await Repository.GetAllAsync().ToArrayAsync(TestContext.Current.CancellationToken);
+        var result = await Repository.GetAllAsync(CancellationToken).ToArrayAsync(CancellationToken);
 
         // Assert
-        result.Should().BeEquivalentTo(replies, options => options
-            .ComparingByMembers<CountryReply>());
+        result.Should().BeEquivalentTo(replies, options => options.ComparingByMembers<CountryReply>());
     }
 }

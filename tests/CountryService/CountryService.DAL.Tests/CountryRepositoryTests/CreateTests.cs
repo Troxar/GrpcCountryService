@@ -12,7 +12,7 @@ public sealed class CreateTests(PostgreSqlFixture fixture) : CountryRepositoryTe
         var model = TestDataFactory.CreateCountryModel(1, 2);
 
         // Act
-        var id = await repository.CreateAsync(model);
+        var id = await repository.CreateAsync(model, CancellationToken);
 
         // Assert
         id.Should().BeGreaterThan(0);

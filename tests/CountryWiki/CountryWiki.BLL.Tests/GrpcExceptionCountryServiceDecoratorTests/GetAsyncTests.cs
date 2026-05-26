@@ -8,15 +8,16 @@ public sealed class GetAsyncTests : GrpcExceptionCountryServiceDecoratorTestsBas
         // Arrange
         const int countryId = 10;
         var rpcException = TestDataFactory.CreateRpcException(StatusCode.NotFound);
-        Inner.GetAsync(countryId).Returns(Task.FromException<CountryModel?>(rpcException));
+        Inner.GetAsync(countryId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<CountryModel?>(rpcException));
 
         // Act
-        var result = await Decorator.GetAsync(countryId);
+        var result = await Decorator.GetAsync(countryId, CancellationToken);
 
         // Assert
         result.Should().BeNull();
 
-        await Inner.Received(1).GetAsync(countryId);
+        await Inner.Received(1).GetAsync(countryId, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -25,10 +26,11 @@ public sealed class GetAsyncTests : GrpcExceptionCountryServiceDecoratorTestsBas
         // Arrange
         const int countryId = 10;
         var rpcException = TestDataFactory.CreateRpcException(StatusCode.Internal);
-        Inner.GetAsync(countryId).Returns(Task.FromException<CountryModel?>(rpcException));
+        Inner.GetAsync(countryId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<CountryModel?>(rpcException));
 
         // Act
-        var act = async () => await Decorator.GetAsync(countryId);
+        var act = async () => await Decorator.GetAsync(countryId, CancellationToken);
 
         // Assert
         var exception = await act.Should().ThrowAsync<CountryServiceException>();
@@ -43,10 +45,10 @@ public sealed class GetAsyncTests : GrpcExceptionCountryServiceDecoratorTestsBas
     {
         // Arrange
         var country = TestDataFactory.CreateCountryModel(1);
-        Inner.GetAsync(country.Id).Returns(Task.FromResult<CountryModel?>(country));
+        Inner.GetAsync(country.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<CountryModel?>(country));
 
         // Act
-        var result = await Decorator.GetAsync(country.Id);
+        var result = await Decorator.GetAsync(country.Id, CancellationToken);
 
         // Assert
         result.Should().BeEquivalentTo(result);

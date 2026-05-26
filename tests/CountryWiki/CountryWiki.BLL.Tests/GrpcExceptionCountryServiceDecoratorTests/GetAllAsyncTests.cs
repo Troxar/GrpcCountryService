@@ -7,10 +7,11 @@ public sealed class GetAllAsyncTests : GrpcExceptionCountryServiceDecoratorTests
     {
         // Arrange
         var rpcException = TestDataFactory.CreateRpcException(StatusCode.Unavailable);
-        Inner.GetAllAsync().Returns(Task.FromException<IEnumerable<CountryModel>>(rpcException));
+        Inner.GetAllAsync(Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<IEnumerable<CountryModel>>(rpcException));
 
         // Act
-        var act = async () => await Decorator.GetAllAsync();
+        var act = async () => await Decorator.GetAllAsync(CancellationToken);
 
         // Assert
         var exception = await act.Should().ThrowAsync<CountryServiceException>();
@@ -28,10 +29,10 @@ public sealed class GetAllAsyncTests : GrpcExceptionCountryServiceDecoratorTests
         {
             TestDataFactory.CreateCountryModel(1)
         };
-        Inner.GetAllAsync().Returns(Task.FromResult<IEnumerable<CountryModel>>(countries));
+        Inner.GetAllAsync(Arg.Any<CancellationToken>()).Returns(Task.FromResult<IEnumerable<CountryModel>>(countries));
 
         // Act
-        var result = await Decorator.GetAllAsync();
+        var result = await Decorator.GetAllAsync(CancellationToken);
 
         // Assert
         result.Should().BeEquivalentTo(countries);
