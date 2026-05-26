@@ -1,4 +1,5 @@
 global using System.Net;
+global using System.Net.Http.Headers;
 global using CountryService.DAL.Database;
 global using CountryService.DAL.Database.Entities;
 global using CountryShared.Extensions;
@@ -7,6 +8,7 @@ global using CountryWiki.Web.IntegrationTests.Infrastructure.TestLogger;
 global using CountryWiki.Web.Interceptors;
 global using CountryWiki.Web.Pages;
 global using FluentAssertions;
+global using Grpc.Core;
 global using Grpc.Health.V1;
 global using Microsoft.AspNetCore.Hosting;
 global using Microsoft.AspNetCore.Mvc.Testing;

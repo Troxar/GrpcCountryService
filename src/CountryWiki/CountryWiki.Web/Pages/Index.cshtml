@@ -17,7 +17,10 @@
         <div>
             <input type="submit" value="Upload" />
         </div>
-        <div class="text-danger">@Model.ErrorMessage</div>
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <div class="ext-center text-danger">@Model.ErrorMessage</div>
+        }
         @if (Model.GlobalOptions.ProcessingUpload) {
             <div class="text-center text-danger">
                 <h2>A file upload is in progress...</h2>
