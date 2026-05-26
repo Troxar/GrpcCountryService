@@ -11,6 +11,6 @@ public abstract class CountryRepositoryTestsBase
     protected CountryRepositoryTestsBase()
     {
         Client = Substitute.For<CountryServiceClient>();
-        Repository = new CountryRepository(Client, Options.Create(new GrpcOptions()));
+        Repository = new CountryRepository(Client, Options.Create(new GrpcOptions()), TimeProvider.System);
     }
 }

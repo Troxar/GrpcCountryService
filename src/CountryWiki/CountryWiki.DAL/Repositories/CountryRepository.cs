@@ -6,10 +6,13 @@ public class CountryRepository : ICountryRepository
 {
     private readonly CountryServiceClient _countryServiceClient;
     private readonly GrpcOptions _grpcOptions;
+    private readonly TimeProvider _timeProvider;
 
-    public CountryRepository(CountryServiceClient countryServiceClient, IOptions<GrpcOptions> grpcOptions)
+    public CountryRepository(CountryServiceClient countryServiceClient, IOptions<GrpcOptions> grpcOptions,
+        TimeProvider timeProvider)
     {
         _countryServiceClient = countryServiceClient;
+        _timeProvider = timeProvider;
         _grpcOptions = grpcOptions.Value;
     }
 
@@ -71,6 +74,8 @@ public class CountryRepository : ICountryRepository
 
     private DateTime CreateDeadline()
     {
-        return DateTime.UtcNow.Add(_grpcOptions.DefaultCallTimeout);
+        return _timeProvider.GetUtcNow()
+            .Add(_grpcOptions.DefaultCallTimeout)
+            .UtcDateTime;
     }
 }

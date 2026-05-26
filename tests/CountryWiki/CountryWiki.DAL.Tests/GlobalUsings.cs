@@ -7,5 +7,6 @@ global using FluentAssertions;
 global using Google.Protobuf.WellKnownTypes;
 global using Grpc.Core;
 global using Microsoft.Extensions.Options;
+global using Microsoft.Extensions.Time.Testing;
 global using NSubstitute;
 global using Xunit;

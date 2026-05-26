@@ -16,12 +16,16 @@ public static class ServiceCollectionExtensions
 
         public IServiceCollection AddCountryWikiServices()
         {
+            services.AddHostedService<SyncUploadedCountriesBackgroundService>();
+
+            services.AddSingleton<ISyncCountriesChannel, SyncCountriesChannel>();
+            services.AddSingleton(TimeProvider.System);
+
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ICountryService, BLL.Services.CountryService.CountryService>();
             services.Decorate<ICountryService, GrpcExceptionCountryServiceDecorator>();
             services.AddScoped<IFileUploadValidatorService, FileUploadValidatorService>();
-            services.AddSingleton<ISyncCountriesChannel, SyncCountriesChannel>();
-            services.AddHostedService<SyncUploadedCountriesBackgroundService>();
+
             services.AddTransient<TracerInterceptor>();
 
             return services;

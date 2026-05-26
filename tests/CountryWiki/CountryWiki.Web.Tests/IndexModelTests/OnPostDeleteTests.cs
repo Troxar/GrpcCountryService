@@ -65,4 +65,23 @@ public sealed class OnPostDeleteTests : IndexModelTestsBase
         await CountryService.Received(1).DeleteAsync(countryId, Arg.Any<CancellationToken>());
         await CountryService.Received(1).GetAllAsync(Arg.Any<CancellationToken>());
     }
+
+    [Fact]
+    public async Task ShouldPassCancellationTokenToCountryService()
+    {
+        // Arrange
+        const int countryId = 10;
+        using var cancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = cancellationTokenSource.Token;
+        CountryService.DeleteAsync(countryId, cancellationToken).Returns(Task.CompletedTask);
+
+        // Act
+        var result = await IndexModel.OnPostDeleteAsync(countryId, cancellationToken);
+
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
+        redirectResult.PageName.Should().Be("./Index");
+
+        await CountryService.Received(1).DeleteAsync(countryId, cancellationToken);
+    }
 }
