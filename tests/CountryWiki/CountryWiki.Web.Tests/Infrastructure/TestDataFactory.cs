@@ -49,4 +49,10 @@ internal static class TestDataFactory
             Description = Guid.NewGuid().ToString()
         };
     }
+
+    internal static CountryServiceException CreateCountryServiceException(CountryServiceErrorCode errorCode,
+        string? message = null)
+    {
+        return new CountryServiceException(errorCode, message ?? Guid.NewGuid().ToString());
+    }
 }

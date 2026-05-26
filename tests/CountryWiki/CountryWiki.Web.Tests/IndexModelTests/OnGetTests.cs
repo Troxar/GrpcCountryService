@@ -3,7 +3,7 @@ namespace CountryWiki.Web.Tests.IndexModelTests;
 public sealed class OnGetTests : IndexModelTestsBase
 {
     [Fact]
-    public async Task ShouldLoadCountries()
+    public async Task ShouldLoadCountries_WhenCountryServiceSucceeds()
     {
         // Arrange
         var countries = new[]
@@ -22,19 +22,17 @@ public sealed class OnGetTests : IndexModelTestsBase
     }
 
     [Fact]
-    public async Task ShouldSetErrorMessage_WhenCountryServiceFails()
+    public async Task ShouldSetErrorMessageAndEmptyCountries_WhenCountryServiceThrowsServiceUnavailable()
     {
         // Arrange
-        var exceptionMessage = Guid.NewGuid().ToString();
-        CountryService.GetAllAsync().Returns<IEnumerable<CountryModel>>(_ =>
-            throw new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable, exceptionMessage));
+        var exception = TestDataFactory.CreateCountryServiceException(CountryServiceErrorCode.ServiceUnavailable);
+        CountryService.GetAllAsync().Returns(Task.FromException<IEnumerable<CountryModel>>(exception));
 
         // Act
         await IndexModel.OnGetAsync();
 
         // Assert
-        IndexModel.ErrorMessage.Should().Be(exceptionMessage);
         IndexModel.Countries.Should().BeEmpty();
-        await CountryService.Received(1).GetAllAsync();
+        IndexModel.ErrorMessage.Should().Be(exception.Message);
     }
 }

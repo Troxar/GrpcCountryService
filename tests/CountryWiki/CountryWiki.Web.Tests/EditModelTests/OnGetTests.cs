@@ -3,7 +3,7 @@ namespace CountryWiki.Web.Tests.EditModelTests;
 public sealed class OnGetTests : EditModelTestsBase
 {
     [Fact]
-    public async Task ShouldFillPageModel_WhenCountryExists()
+    public async Task ShouldReturnPageAndFillModel_WhenCountryExists()
     {
         // Arrange
         var country = TestDataFactory.CreateCountryModel(1);
@@ -21,7 +21,7 @@ public sealed class OnGetTests : EditModelTestsBase
     }
 
     [Fact]
-    public async Task ShouldLeavePageModelDefault_WhenCountryDoesNotExist()
+    public async Task ShouldReturnNotFound_WhenCountryDoesNotExist()
     {
         // Arrange
         const int countryId = 999;

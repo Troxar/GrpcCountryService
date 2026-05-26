@@ -65,7 +65,7 @@ public sealed class OnPostTests : EditModelTestsBase
     }
 
     [Fact]
-    public async Task ShouldRedirectToError_WhenModelStateIsInvalid_AndCountryServiceFails()
+    public async Task ShouldRedirectToErrorPage_WhenModelStateIsInvalid_AndCountryServiceFails()
     {
         // Arrange
         var countryToUpdate = TestDataFactory.CreateUpdateCountry(1);
@@ -87,5 +87,21 @@ public sealed class OnPostTests : EditModelTestsBase
 
         await CountryService.Received(1).GetAsync(countryToUpdate.Id);
         await CountryService.DidNotReceive().UpdateAsync(Arg.Any<UpdateCountryModel>());
+    }
+
+    [Fact]
+    public async Task ShouldRedirectToErrorPage_WhenUpdateThrowsTimeout()
+    {
+        // Arrange
+        EditModel.CountryToUpdate = TestDataFactory.CreateUpdateCountry(10);
+        var exception = TestDataFactory.CreateCountryServiceException(CountryServiceErrorCode.Timeout);
+        CountryService.UpdateAsync(Arg.Any<UpdateCountryModel>()).Returns(Task.FromException(exception));
+
+        // Act
+        var result = await EditModel.OnPostAsync();
+
+        // Assert
+        var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
+        redirectResult.PageName.Should().Be("/Error");
     }
 }

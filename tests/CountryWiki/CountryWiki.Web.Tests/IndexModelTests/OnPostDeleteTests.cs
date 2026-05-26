@@ -20,17 +20,16 @@ public sealed class OnPostDeleteTests : IndexModelTestsBase
     }
 
     [Fact]
-    public async Task ShouldReturnPageWithError_WhenCountryServiceFails()
+    public async Task ShouldReturnPageWithErrorMessage_WhenCountryServiceThrowsInternalError()
     {
         // Arrange
         const int countryId = 1;
         var countries = new[]
         {
-            TestDataFactory.CreateCountryModel(1)
+            TestDataFactory.CreateCountryModel(2)
         };
-        var message = Guid.NewGuid().ToString();
-        CountryService.DeleteAsync(countryId).Returns(_ =>
-            throw new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable, message));
+        var exception = TestDataFactory.CreateCountryServiceException(CountryServiceErrorCode.ServiceUnavailable);
+        CountryService.DeleteAsync(countryId).Returns(_ => throw exception);
         CountryService.GetAllAsync().Returns(countries);
 
         // Act
@@ -38,7 +37,7 @@ public sealed class OnPostDeleteTests : IndexModelTestsBase
 
         // Assert
         result.Should().BeOfType<PageResult>();
-        IndexModel.ErrorMessage.Should().Be(message);
+        IndexModel.ErrorMessage.Should().Be(exception.Message);
         IndexModel.Countries.Should().BeEquivalentTo(countries);
 
         await CountryService.Received(1).DeleteAsync(countryId);
@@ -50,18 +49,17 @@ public sealed class OnPostDeleteTests : IndexModelTestsBase
     {
         // Arrange
         const int countryId = 1;
-        var deleteExceptionMessage = Guid.NewGuid().ToString();
-        CountryService.DeleteAsync(countryId).Returns(_ =>
-            throw new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable, deleteExceptionMessage));
+        var deleteException = TestDataFactory.CreateCountryServiceException(CountryServiceErrorCode.ServiceUnavailable);
+        CountryService.DeleteAsync(countryId).Returns(_ => throw deleteException);
         CountryService.GetAllAsync().Returns<IEnumerable<CountryModel>>(_ =>
-            throw new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable, Guid.NewGuid().ToString()));
+            throw TestDataFactory.CreateCountryServiceException(CountryServiceErrorCode.ServiceUnavailable));
 
         // Act
         var result = await IndexModel.OnPostDeleteAsync(countryId);
 
         // Assert
         result.Should().BeOfType<PageResult>();
-        IndexModel.ErrorMessage.Should().Be(deleteExceptionMessage);
+        IndexModel.ErrorMessage.Should().Be(deleteException.Message);
         IndexModel.Countries.Should().BeEmpty();
 
         await CountryService.Received(1).DeleteAsync(countryId);

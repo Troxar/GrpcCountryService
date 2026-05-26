@@ -1,8 +1,13 @@
 global using System.Net.Mime;
 global using System.Text;
 global using System.Text.Json;
+global using CountryWiki.BLL.Errors;
 global using CountryWiki.BLL.Services;
+global using CountryWiki.BLL.Services.CountryService;
 global using CountryWiki.BLL.Tests.Infrastructure;
 global using CountryWiki.Domain.Models;
+global using CountryWiki.Domain.Services;
 global using FluentAssertions;
+global using Grpc.Core;
+global using NSubstitute;
 global using Xunit;
