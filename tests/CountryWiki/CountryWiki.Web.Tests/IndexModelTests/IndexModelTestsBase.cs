@@ -5,6 +5,7 @@ public abstract class IndexModelTestsBase
     protected readonly ICountryService CountryService;
     protected readonly IFileUploadValidatorService FileUploadValidatorService;
     protected readonly ISyncCountriesChannel SyncCountriesChannel;
+    protected readonly GlobalOptions GlobalOptions;
     protected readonly IndexModel IndexModel;
     protected readonly CancellationToken CancellationToken = TestContext.Current.CancellationToken;
 
@@ -13,7 +14,7 @@ public abstract class IndexModelTestsBase
         CountryService = Substitute.For<ICountryService>();
         FileUploadValidatorService = Substitute.For<IFileUploadValidatorService>();
         SyncCountriesChannel = Substitute.For<ISyncCountriesChannel>();
-        IndexModel = new IndexModel(CountryService, FileUploadValidatorService, SyncCountriesChannel,
-            new GlobalOptions());
+        GlobalOptions = new GlobalOptions();
+        IndexModel = new IndexModel(CountryService, FileUploadValidatorService, SyncCountriesChannel, GlobalOptions);
     }
 }

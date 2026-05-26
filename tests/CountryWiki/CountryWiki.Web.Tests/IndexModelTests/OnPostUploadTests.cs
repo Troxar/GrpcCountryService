@@ -121,10 +121,39 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         redirectResult.PageName.Should().Be("./Index");
 
         IndexModel.ErrorMessage.Should().BeEmpty();
+        GlobalOptions.ProcessingUpload.Should().BeTrue();
 
         await SyncCountriesChannel.Received(1)
             .SyncAsync(Arg.Is<IEnumerable<CreateCountryModel>>(x => x.SequenceEqual(countries)), CancellationToken);
         await CountryService.DidNotReceive().GetAllAsync();
+    }
+
+    [Fact]
+    public async Task ShouldReturnPageWithError_WhenUploadProcessingCannotBeStarted()
+    {
+        // Arrange
+        var countries = new[]
+        {
+            TestDataFactory.CreateCreateCountryModel()
+        };
+        IndexModel.Upload = TestDataFactory.CreateFormFile("countries.json", MediaTypeNames.Application.Json, "{}");
+        FileUploadValidatorService.ValidateFile(Arg.Any<UploadedFileModel>()).Returns(true);
+        FileUploadValidatorService.ParseFileAsync(Arg.Any<Stream>()).Returns(countries);
+        SyncCountriesChannel.SyncAsync(Arg.Any<IEnumerable<CreateCountryModel>>(), Arg.Any<CancellationToken>())
+            .Returns(false);
+        CountryService.GetAllAsync().Returns([]);
+
+        // Act
+        var result = await IndexModel.OnPostUploadAsync(CancellationToken);
+
+        // Assert
+        result.Should().BeOfType<PageResult>();
+        IndexModel.ErrorMessage.Should().Be("Cannot start file upload processing");
+        GlobalOptions.ProcessingUpload.Should().BeFalse();
+
+        await SyncCountriesChannel.Received(1)
+            .SyncAsync(Arg.Is<IEnumerable<CreateCountryModel>>(x => x.SequenceEqual(countries)), CancellationToken);
+        await CountryService.Received(1).GetAllAsync();
     }
 
     [Fact]

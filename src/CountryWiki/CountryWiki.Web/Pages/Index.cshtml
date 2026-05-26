@@ -19,9 +19,10 @@
         </div>
         @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
         {
-            <div class="ext-center text-danger">@Model.ErrorMessage</div>
+            <div class="text-center text-danger">@Model.ErrorMessage</div>
         }
-        @if (Model.GlobalOptions.ProcessingUpload) {
+        @if (Model.GlobalOptions.ProcessingUpload)
+        {
             <div class="text-center text-danger">
                 <h2>A file upload is in progress...</h2>
             </div>
@@ -65,3 +66,12 @@
     }
     </tbody>
 </table>
+
+@section Scripts {
+    @if (Model.GlobalOptions.ProcessingUpload)
+    {
+        <script>
+            setTimeout(() => window.location.reload(), 2000);
+        </script>
+    }
+}

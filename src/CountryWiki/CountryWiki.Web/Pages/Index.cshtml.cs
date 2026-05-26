@@ -46,9 +46,13 @@ public class IndexModel : PageModel
         if (countries.Length == 0)
             return await HandleFileValidationAsync("Cannot parse the file or the file is empty");
 
-        await _syncCountriesChannel.SyncAsync(countries, cancellationToken);
+        GlobalOptions.ProcessingUpload = true;
+        var syncStarted = await _syncCountriesChannel.SyncAsync(countries, cancellationToken);
+        if (syncStarted)
+            return RedirectToPage("./Index");
 
-        return RedirectToPage("./Index");
+        GlobalOptions.ProcessingUpload = false;
+        return await HandleFileValidationAsync("Cannot start file upload processing");
     }
 
     public async Task<IActionResult> OnPostDeleteAsync(int id)
@@ -75,6 +79,12 @@ public class IndexModel : PageModel
 
     private async Task LoadCountriesAsync()
     {
+        if (GlobalOptions.ProcessingUpload)
+        {
+            Countries = [];
+            return;
+        }
+
         try
         {
             Countries = await _countryService.GetAllAsync();

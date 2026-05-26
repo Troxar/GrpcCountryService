@@ -22,6 +22,20 @@ public sealed class OnGetTests : IndexModelTestsBase
     }
 
     [Fact]
+    public async Task ShouldNotLoadCountries_WhenUploadProcessingIsInProgress()
+    {
+        // Arrange
+        GlobalOptions.ProcessingUpload = true;
+
+        // Act
+        await IndexModel.OnGetAsync();
+
+        // Assert
+        IndexModel.Countries.Should().BeEmpty();
+        await CountryService.DidNotReceive().GetAllAsync();
+    }
+
+    [Fact]
     public async Task ShouldSetErrorMessageAndEmptyCountries_WhenCountryServiceThrowsServiceUnavailable()
     {
         // Arrange
