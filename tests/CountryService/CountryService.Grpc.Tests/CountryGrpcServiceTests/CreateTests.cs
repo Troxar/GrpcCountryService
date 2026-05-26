@@ -15,7 +15,7 @@ public sealed class CreateTests : CountryGrpcServiceTestsBase
         for (var i = 0; i < requests.Length; i++)
         {
             var name = requests[i].Name;
-            CountryService.CreateAsync(Arg.Is<CreateCountryModel>(x => x.Name == name))
+            CountryService.CreateAsync(Arg.Is<CreateCountryModel>(x => x.Name == name), Arg.Any<CancellationToken>())
                 .Returns(i + 1);
         }
 
@@ -38,7 +38,7 @@ public sealed class CreateTests : CountryGrpcServiceTestsBase
             await CountryService.Received(1)
                 .CreateAsync(Arg.Is<CreateCountryModel>(x =>
                     x.Name == request.Name
-                    && x.Description == request.Description));
+                    && x.Description == request.Description), Arg.Any<CancellationToken>());
         }
     }
 }

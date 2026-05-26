@@ -4,6 +4,7 @@ public abstract class EditModelTestsBase
 {
     protected readonly ICountryService CountryService;
     protected readonly EditModel EditModel;
+    protected readonly CancellationToken CancellationToken = TestContext.Current.CancellationToken;
 
     protected EditModelTestsBase()
     {

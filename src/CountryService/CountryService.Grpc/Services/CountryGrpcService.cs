@@ -12,10 +12,13 @@ public class CountryGrpcService : v1.CountryService.CountryServiceBase
     public override async Task Create(IAsyncStreamReader<CountryCreateRequest> requestStream,
         IServerStreamWriter<CountryCreateReply> responseStream, ServerCallContext context)
     {
-        await foreach (var countryToCreate in requestStream.ReadAllAsync())
+        await foreach (var countryToCreate in requestStream.ReadAllAsync(context.CancellationToken))
         {
             var model = countryToCreate.ToModel();
-            var id = await _countryService.CreateAsync(model);
+            var id = await _countryService.CreateAsync(model, context.CancellationToken);
+            
+            context.CancellationToken.ThrowIfCancellationRequested();
+            
             var reply = new CountryCreateReply
             {
                 Id = id,
@@ -28,7 +31,7 @@ public class CountryGrpcService : v1.CountryService.CountryServiceBase
     public override async Task<Empty> Update(CountryUpdateRequest request, ServerCallContext context)
     {
         var model = request.ToModel();
-        var updateSucceed = await _countryService.UpdateAsync(model);
+        var updateSucceed = await _countryService.UpdateAsync(model, context.CancellationToken);
         if (!updateSucceed)
             throw new RpcException(new Status(StatusCode.NotFound,
                 $"Country with Id {request.Id} hasn't been updated. It has probably been deleted."));
@@ -38,7 +41,7 @@ public class CountryGrpcService : v1.CountryService.CountryServiceBase
 
     public override async Task<Empty> Delete(CountryIdRequest request, ServerCallContext context)
     {
-        var deleteSucceed = await _countryService.DeleteAsync(request.Id);
+        var deleteSucceed = await _countryService.DeleteAsync(request.Id, context.CancellationToken);
         if (!deleteSucceed)
             throw new RpcException(new Status(StatusCode.NotFound,
                 $"Country with Id {request.Id} hasn't been deleted. It has probably already been deleted."));
@@ -48,7 +51,7 @@ public class CountryGrpcService : v1.CountryService.CountryServiceBase
 
     public override async Task<CountryReply> Get(CountryIdRequest request, ServerCallContext context)
     {
-        var model = await _countryService.GetAsync(request.Id);
+        var model = await _countryService.GetAsync(request.Id, context.CancellationToken);
         if (model is null)
             throw new RpcException(new Status(StatusCode.NotFound,
                 $"Country with Id {request.Id} hasn't been found"));
@@ -59,7 +62,7 @@ public class CountryGrpcService : v1.CountryService.CountryServiceBase
     public override async Task GetAll(Empty request, IServerStreamWriter<CountryReply> responseStream,
         ServerCallContext context)
     {
-        foreach (var model in await _countryService.GetAllAsync())
+        foreach (var model in await _countryService.GetAllAsync(context.CancellationToken))
         {
             var reply = model.ToReply();
             await responseStream.WriteAsync(reply);

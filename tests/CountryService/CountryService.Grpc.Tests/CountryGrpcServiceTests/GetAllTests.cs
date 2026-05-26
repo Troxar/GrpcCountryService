@@ -11,7 +11,7 @@ public sealed class GetAllTests : CountryGrpcServiceTestsBase
             TestDataFactory.CreateCountryModel(1),
             TestDataFactory.CreateCountryModel(2)
         };
-        CountryService.GetAllAsync().Returns(countries);
+        CountryService.GetAllAsync(Arg.Any<CancellationToken>()).Returns(countries);
 
         var responseStream = TestDataFactory.CreateServerStreamWriter<CountryReply>();
 

@@ -14,15 +14,15 @@ public class EditModel : PageModel
         _countryService = countryService;
     }
 
-    public async Task<IActionResult> OnGetAsync(int id)
+    public async Task<IActionResult> OnGetAsync(int id, CancellationToken cancellationToken)
     {
-        return await LoadCountryPageAsync(id);
+        return await LoadCountryPageAsync(id, true, cancellationToken);
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
-            return await LoadCountryPageAsync(CountryToUpdate.Id, false);
+            return await LoadCountryPageAsync(CountryToUpdate.Id, false, cancellationToken);
 
         try
         {
@@ -31,7 +31,7 @@ public class EditModel : PageModel
                 Id = CountryToUpdate.Id,
                 Description = CountryToUpdate.Description
             };
-            await _countryService.UpdateAsync(model);
+            await _countryService.UpdateAsync(model, cancellationToken);
 
             return RedirectToPage("./Index");
         }
@@ -41,11 +41,12 @@ public class EditModel : PageModel
         }
     }
 
-    private async Task<IActionResult> LoadCountryPageAsync(int id, bool updateCountryToUpdate = true)
+    private async Task<IActionResult> LoadCountryPageAsync(int id, bool updateCountryToUpdate,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var country = await _countryService.GetAsync(id);
+            var country = await _countryService.GetAsync(id, cancellationToken);
             if (country is null)
                 return NotFound();
 

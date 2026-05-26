@@ -10,11 +10,11 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         {
             TestDataFactory.CreateCountryModel(1)
         };
-        CountryService.GetAllAsync().Returns(countries);
+        CountryService.GetAllAsync(Arg.Any<CancellationToken>()).Returns(countries);
         IndexModel.Upload = null;
 
         // Act
-        var result = await IndexModel.OnPostUploadAsync(CancellationToken.None);
+        var result = await IndexModel.OnPostUploadAsync(CancellationToken);
 
         // Assert
         result.Should().BeOfType<PageResult>();
@@ -23,8 +23,9 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         IndexModel.Countries.Should().BeEquivalentTo(countries);
         FileUploadValidatorService.DidNotReceive().ValidateFile(Arg.Any<UploadedFileModel>());
 
-        await CountryService.Received(1).GetAllAsync();
-        await FileUploadValidatorService.DidNotReceive().ParseFileAsync(Arg.Any<Stream>());
+        await CountryService.Received(1).GetAllAsync(Arg.Any<CancellationToken>());
+        await FileUploadValidatorService.DidNotReceive()
+            .ParseFileAsync(Arg.Any<Stream>(), Arg.Any<CancellationToken>());
         await SyncCountriesChannel.DidNotReceive()
             .SyncAsync(Arg.Any<IEnumerable<CreateCountryModel>>(), Arg.Any<CancellationToken>());
     }
@@ -37,7 +38,7 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         {
             TestDataFactory.CreateCountryModel(1)
         };
-        CountryService.GetAllAsync().Returns(countries);
+        CountryService.GetAllAsync(Arg.Any<CancellationToken>()).Returns(countries);
         IndexModel.Upload = TestDataFactory.CreateFormFile("countries.txt", MediaTypeNames.Text.Plain, "not json");
         FileUploadValidatorService.ValidateFile(Arg.Is<UploadedFileModel>(x =>
                 x.FileName == "countries.txt"
@@ -56,7 +57,8 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
             x.FileName == "countries.txt"
             && x.ContentType == MediaTypeNames.Text.Plain));
 
-        await FileUploadValidatorService.DidNotReceive().ParseFileAsync(Arg.Any<Stream>());
+        await FileUploadValidatorService.DidNotReceive()
+            .ParseFileAsync(Arg.Any<Stream>(), Arg.Any<CancellationToken>());
         await SyncCountriesChannel.DidNotReceive()
             .SyncAsync(Arg.Any<IEnumerable<CreateCountryModel>>(), Arg.Any<CancellationToken>());
     }
@@ -69,11 +71,11 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         {
             TestDataFactory.CreateCountryModel(1)
         };
-        CountryService.GetAllAsync().Returns(countries);
+        CountryService.GetAllAsync(Arg.Any<CancellationToken>()).Returns(countries);
         IndexModel.Upload = TestDataFactory.CreateFormFile("countries.json", MediaTypeNames.Application.Json,
             "invalid json");
         FileUploadValidatorService.ValidateFile(Arg.Any<UploadedFileModel>()).Returns(true);
-        FileUploadValidatorService.ParseFileAsync(Arg.Any<Stream>()).Returns([]);
+        FileUploadValidatorService.ParseFileAsync(Arg.Any<Stream>(), Arg.Any<CancellationToken>()).Returns([]);
 
         // Act
         var result = await IndexModel.OnPostUploadAsync(CancellationToken);
@@ -87,7 +89,7 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
             x.FileName == "countries.json"
             && x.ContentType == MediaTypeNames.Application.Json));
 
-        await FileUploadValidatorService.Received(1).ParseFileAsync(Arg.Any<Stream>());
+        await FileUploadValidatorService.Received(1).ParseFileAsync(Arg.Any<Stream>(), Arg.Any<CancellationToken>());
         await SyncCountriesChannel.DidNotReceive()
             .SyncAsync(Arg.Any<IEnumerable<CreateCountryModel>>(), Arg.Any<CancellationToken>());
     }
@@ -109,7 +111,7 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
                                """;
         IndexModel.Upload = TestDataFactory.CreateFormFile("countries.json", MediaTypeNames.Application.Json, content);
         FileUploadValidatorService.ValidateFile(Arg.Any<UploadedFileModel>()).Returns(true);
-        FileUploadValidatorService.ParseFileAsync(Arg.Any<Stream>()).Returns(countries);
+        FileUploadValidatorService.ParseFileAsync(Arg.Any<Stream>(), Arg.Any<CancellationToken>()).Returns(countries);
         SyncCountriesChannel.SyncAsync(Arg.Any<IEnumerable<CreateCountryModel>>(), Arg.Any<CancellationToken>())
             .Returns(true);
 
@@ -124,8 +126,9 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         GlobalOptions.ProcessingUpload.Should().BeTrue();
 
         await SyncCountriesChannel.Received(1)
-            .SyncAsync(Arg.Is<IEnumerable<CreateCountryModel>>(x => x.SequenceEqual(countries)), CancellationToken);
-        await CountryService.DidNotReceive().GetAllAsync();
+            .SyncAsync(Arg.Is<IEnumerable<CreateCountryModel>>(x => x.SequenceEqual(countries)),
+                Arg.Any<CancellationToken>());
+        await CountryService.DidNotReceive().GetAllAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -138,10 +141,10 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         };
         IndexModel.Upload = TestDataFactory.CreateFormFile("countries.json", MediaTypeNames.Application.Json, "{}");
         FileUploadValidatorService.ValidateFile(Arg.Any<UploadedFileModel>()).Returns(true);
-        FileUploadValidatorService.ParseFileAsync(Arg.Any<Stream>()).Returns(countries);
+        FileUploadValidatorService.ParseFileAsync(Arg.Any<Stream>(), Arg.Any<CancellationToken>()).Returns(countries);
         SyncCountriesChannel.SyncAsync(Arg.Any<IEnumerable<CreateCountryModel>>(), Arg.Any<CancellationToken>())
             .Returns(false);
-        CountryService.GetAllAsync().Returns([]);
+        CountryService.GetAllAsync(Arg.Any<CancellationToken>()).Returns([]);
 
         // Act
         var result = await IndexModel.OnPostUploadAsync(CancellationToken);
@@ -152,20 +155,21 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         GlobalOptions.ProcessingUpload.Should().BeFalse();
 
         await SyncCountriesChannel.Received(1)
-            .SyncAsync(Arg.Is<IEnumerable<CreateCountryModel>>(x => x.SequenceEqual(countries)), CancellationToken);
-        await CountryService.Received(1).GetAllAsync();
+            .SyncAsync(Arg.Is<IEnumerable<CreateCountryModel>>(x => x.SequenceEqual(countries)),
+                Arg.Any<CancellationToken>());
+        await CountryService.Received(1).GetAllAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task ShouldKeepUploadError_WhenReloadingCountriesFails()
     {
         // Arrange
-        CountryService.GetAllAsync().Returns<IEnumerable<CountryModel>>(_ =>
+        CountryService.GetAllAsync(Arg.Any<CancellationToken>()).Returns<IEnumerable<CountryModel>>(_ =>
             throw new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable, Guid.NewGuid().ToString()));
         IndexModel.Upload = null;
 
         // Act
-        var result = await IndexModel.OnPostUploadAsync(CancellationToken.None);
+        var result = await IndexModel.OnPostUploadAsync(CancellationToken);
 
         // Assert
         result.Should().BeOfType<PageResult>();
@@ -174,8 +178,9 @@ public sealed class OnPostUploadTests : IndexModelTestsBase
         IndexModel.Countries.Should().BeEmpty();
         FileUploadValidatorService.DidNotReceive().ValidateFile(Arg.Any<UploadedFileModel>());
 
-        await CountryService.Received(1).GetAllAsync();
-        await FileUploadValidatorService.DidNotReceive().ParseFileAsync(Arg.Any<Stream>());
+        await CountryService.Received(1).GetAllAsync(Arg.Any<CancellationToken>());
+        await FileUploadValidatorService.DidNotReceive()
+            .ParseFileAsync(Arg.Any<Stream>(), Arg.Any<CancellationToken>());
         await SyncCountriesChannel.DidNotReceive()
             .SyncAsync(Arg.Any<IEnumerable<CreateCountryModel>>(), Arg.Any<CancellationToken>());
     }

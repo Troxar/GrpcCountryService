@@ -8,10 +8,11 @@ public sealed class OnPostTests : EditModelTestsBase
         // Arrange
         var countryToUpdate = TestDataFactory.CreateUpdateCountry(1);
         EditModel.CountryToUpdate = countryToUpdate;
-        CountryService.UpdateAsync(Arg.Any<UpdateCountryModel>()).Returns(Task.CompletedTask);
+        CountryService.UpdateAsync(Arg.Any<UpdateCountryModel>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
 
         // Act
-        var result = await EditModel.OnPostAsync();
+        var result = await EditModel.OnPostAsync(CancellationToken);
 
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
@@ -19,8 +20,8 @@ public sealed class OnPostTests : EditModelTestsBase
 
         await CountryService.Received(1).UpdateAsync(Arg.Is<UpdateCountryModel>(x =>
             x.Id == countryToUpdate.Id
-            && x.Description == countryToUpdate.Description));
-        await CountryService.DidNotReceive().GetAsync(Arg.Any<int>());
+            && x.Description == countryToUpdate.Description), Arg.Any<CancellationToken>());
+        await CountryService.DidNotReceive().GetAsync(Arg.Any<int>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -32,10 +33,10 @@ public sealed class OnPostTests : EditModelTestsBase
         EditModel.CountryToUpdate = countryToUpdate;
         const string propertyName = nameof(UpdateCountry.Description);
         EditModel.ModelState.AddModelError(propertyName, $"{propertyName} is required");
-        CountryService.GetAsync(country.Id).Returns(country);
+        CountryService.GetAsync(country.Id, Arg.Any<CancellationToken>()).Returns(country);
 
         // Act
-        var result = await EditModel.OnPostAsync();
+        var result = await EditModel.OnPostAsync(CancellationToken);
 
         // Assert
         result.Should().BeOfType<PageResult>();
@@ -43,8 +44,8 @@ public sealed class OnPostTests : EditModelTestsBase
         EditModel.CountryName.Should().Be(country.Name);
         EditModel.CountryToUpdate.Should().BeEquivalentTo(countryToUpdate);
 
-        await CountryService.Received(1).GetAsync(country.Id);
-        await CountryService.DidNotReceive().UpdateAsync(Arg.Any<UpdateCountryModel>());
+        await CountryService.Received(1).GetAsync(country.Id, Arg.Any<CancellationToken>());
+        await CountryService.DidNotReceive().UpdateAsync(Arg.Any<UpdateCountryModel>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -55,10 +56,10 @@ public sealed class OnPostTests : EditModelTestsBase
         EditModel.CountryToUpdate = countryToUpdate;
         const string propertyName = nameof(UpdateCountry.Description);
         EditModel.ModelState.AddModelError(propertyName, $"{propertyName} is required");
-        CountryService.GetAsync(countryToUpdate.Id).Returns((CountryModel?)null);
+        CountryService.GetAsync(countryToUpdate.Id, Arg.Any<CancellationToken>()).Returns((CountryModel?)null);
 
         // Act
-        var result = await EditModel.OnPostAsync();
+        var result = await EditModel.OnPostAsync(CancellationToken);
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
@@ -73,11 +74,11 @@ public sealed class OnPostTests : EditModelTestsBase
         const string propertyName = nameof(UpdateCountry.Description);
         EditModel.ModelState.AddModelError(propertyName, $"{propertyName} is required");
         var exceptionMessage = Guid.NewGuid().ToString();
-        CountryService.GetAsync(countryToUpdate.Id).Returns<CountryModel?>(_ =>
+        CountryService.GetAsync(countryToUpdate.Id, Arg.Any<CancellationToken>()).Returns<CountryModel?>(_ =>
             throw new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable, exceptionMessage));
 
         // Act
-        var result = await EditModel.OnPostAsync();
+        var result = await EditModel.OnPostAsync(CancellationToken);
 
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
@@ -85,8 +86,8 @@ public sealed class OnPostTests : EditModelTestsBase
         redirectResult.RouteValues.Should().ContainKey("message").WhoseValue.Should().Be(exceptionMessage);
         EditModel.CountryToUpdate.Should().BeEquivalentTo(countryToUpdate);
 
-        await CountryService.Received(1).GetAsync(countryToUpdate.Id);
-        await CountryService.DidNotReceive().UpdateAsync(Arg.Any<UpdateCountryModel>());
+        await CountryService.Received(1).GetAsync(countryToUpdate.Id, Arg.Any<CancellationToken>());
+        await CountryService.DidNotReceive().UpdateAsync(Arg.Any<UpdateCountryModel>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -95,10 +96,11 @@ public sealed class OnPostTests : EditModelTestsBase
         // Arrange
         EditModel.CountryToUpdate = TestDataFactory.CreateUpdateCountry(10);
         var exception = TestDataFactory.CreateCountryServiceException(CountryServiceErrorCode.Timeout);
-        CountryService.UpdateAsync(Arg.Any<UpdateCountryModel>()).Returns(Task.FromException(exception));
+        CountryService.UpdateAsync(Arg.Any<UpdateCountryModel>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(exception));
 
         // Act
-        var result = await EditModel.OnPostAsync();
+        var result = await EditModel.OnPostAsync(CancellationToken);
 
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;

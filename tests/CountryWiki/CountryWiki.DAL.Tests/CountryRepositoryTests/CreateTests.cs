@@ -22,8 +22,8 @@ public sealed class CreateTests : CountryRepositoryTestsBase
 
 
         // Act
-        var result = await Repository.CreateAsync(countriesToCreate)
-            .ToArrayAsync(TestContext.Current.CancellationToken);
+        var result = await Repository.CreateAsync(countriesToCreate, CancellationToken)
+            .ToArrayAsync(CancellationToken);
 
         // Assert
         requestStream.IsCompleted.Should().BeTrue();

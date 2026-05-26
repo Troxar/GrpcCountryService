@@ -11,14 +11,14 @@ public sealed class OnGetTests : IndexModelTestsBase
             TestDataFactory.CreateCountryModel(1),
             TestDataFactory.CreateCountryModel(2)
         };
-        CountryService.GetAllAsync().Returns(countries);
+        CountryService.GetAllAsync(Arg.Any<CancellationToken>()).Returns(countries);
 
         // Act
-        await IndexModel.OnGetAsync();
+        await IndexModel.OnGetAsync(CancellationToken);
 
         // Assert
         IndexModel.Countries.Should().BeEquivalentTo(countries);
-        await CountryService.Received(1).GetAllAsync();
+        await CountryService.Received(1).GetAllAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -28,11 +28,11 @@ public sealed class OnGetTests : IndexModelTestsBase
         GlobalOptions.ProcessingUpload = true;
 
         // Act
-        await IndexModel.OnGetAsync();
+        await IndexModel.OnGetAsync(CancellationToken);
 
         // Assert
         IndexModel.Countries.Should().BeEmpty();
-        await CountryService.DidNotReceive().GetAllAsync();
+        await CountryService.DidNotReceive().GetAllAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -40,10 +40,11 @@ public sealed class OnGetTests : IndexModelTestsBase
     {
         // Arrange
         var exception = TestDataFactory.CreateCountryServiceException(CountryServiceErrorCode.ServiceUnavailable);
-        CountryService.GetAllAsync().Returns(Task.FromException<IEnumerable<CountryModel>>(exception));
+        CountryService.GetAllAsync(Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<IEnumerable<CountryModel>>(exception));
 
         // Act
-        await IndexModel.OnGetAsync();
+        await IndexModel.OnGetAsync(CancellationToken);
 
         // Assert
         IndexModel.Countries.Should().BeEmpty();

@@ -11,11 +11,13 @@ public class FileUploadValidatorService : IFileUploadValidatorService
                    StringComparison.OrdinalIgnoreCase);
     }
 
-    public async Task<IEnumerable<CreateCountryModel>> ParseFileAsync(Stream content)
+    public async Task<IEnumerable<CreateCountryModel>> ParseFileAsync(Stream content,
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            return await JsonSerializer.DeserializeAsync<IEnumerable<CreateCountryModel>>(content, Options) ?? [];
+            return await JsonSerializer.DeserializeAsync<IEnumerable<CreateCountryModel>>(content, Options,
+                cancellationToken) ?? [];
         }
         catch
         {

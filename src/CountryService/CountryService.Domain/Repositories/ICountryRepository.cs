@@ -2,9 +2,9 @@
 
 public interface ICountryRepository
 {
-    Task<int> CreateAsync(CreateCountryModel countryToCreate);
-    Task<int> UpdateAsync(UpdateCountryModel countryToUpdate);
-    Task<int> DeleteAsync(int id);
-    Task<CountryModel?> GetAsync(int id);
-    Task<IEnumerable<CountryModel>> GetAllAsync();
+    Task<int> CreateAsync(CreateCountryModel countryToCreate, CancellationToken cancellationToken = default);
+    Task<int> UpdateAsync(UpdateCountryModel countryToUpdate, CancellationToken cancellationToken = default);
+    Task<int> DeleteAsync(int id, CancellationToken cancellationToken = default);
+    Task<CountryModel?> GetAsync(int id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<CountryModel>> GetAllAsync(CancellationToken cancellationToken = default);
 }

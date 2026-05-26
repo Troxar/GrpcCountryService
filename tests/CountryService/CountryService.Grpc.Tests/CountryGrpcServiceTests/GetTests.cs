@@ -9,7 +9,7 @@ public sealed class GetTests : CountryGrpcServiceTestsBase
         var request = TestDataFactory.CreateCountryIdRequest(1);
         var model = TestDataFactory.CreateCountryModel(request.Id);
 
-        CountryService.GetAsync(request.Id).Returns(model);
+        CountryService.GetAsync(request.Id, Arg.Any<CancellationToken>()).Returns(model);
 
         // Act
         var result = await GrpcService.Get(request, ServerCallContext);
@@ -17,13 +17,13 @@ public sealed class GetTests : CountryGrpcServiceTestsBase
         // Assert
         result.Should().BeEquivalentTo(model);
     }
-    
+
     [Fact]
     public async Task ShouldThrowNotFound_WhenCountryDoesNotExist()
     {
         // Arrange
         var request = TestDataFactory.CreateCountryIdRequest(404);
-        CountryService.GetAsync(request.Id).Returns((CountryModel?)null);
+        CountryService.GetAsync(request.Id, Arg.Any<CancellationToken>()).Returns((CountryModel?)null);
 
         // Act
         var act = async () => await GrpcService.Get(request, ServerCallContext);

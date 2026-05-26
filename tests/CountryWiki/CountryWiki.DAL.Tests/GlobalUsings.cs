@@ -1,9 +1,11 @@
 global using CountryService.Grpc.v1;
+global using CountryShared.Options;
 global using CountryWiki.DAL.Repositories;
 global using CountryWiki.DAL.Tests.Infrastructure;
 global using CountryWiki.Domain.Models;
 global using FluentAssertions;
 global using Google.Protobuf.WellKnownTypes;
 global using Grpc.Core;
+global using Microsoft.Extensions.Options;
 global using NSubstitute;
 global using Xunit;

@@ -13,7 +13,7 @@ internal static class TestDataFactory
             host: "localhost",
             deadline: DateTime.UtcNow.AddMinutes(1),
             requestHeaders: requestHeaders,
-            cancellationToken: CancellationToken.None,
+            cancellationToken: TestContext.Current.CancellationToken,
             peer: "ipv4:127.0.0.1:5000",
             authContext: null,
             contextPropagationToken: null,

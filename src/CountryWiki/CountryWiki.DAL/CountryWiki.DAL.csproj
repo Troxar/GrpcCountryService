@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\CountryShared\CountryShared.csproj" />
       <ProjectReference Include="..\CountryWiki.Domain\CountryWiki.Domain.csproj" />
     </ItemGroup>
 

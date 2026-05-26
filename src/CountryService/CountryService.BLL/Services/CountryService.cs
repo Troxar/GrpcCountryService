@@ -9,28 +9,30 @@ public class CountryService : ICountryService
         _countryRepository = countryRepository;
     }
 
-    public async Task<int> CreateAsync(CreateCountryModel countryToCreate)
+    public async Task<int> CreateAsync(CreateCountryModel countryToCreate,
+        CancellationToken cancellationToken = default)
     {
-        return await _countryRepository.CreateAsync(countryToCreate);
+        return await _countryRepository.CreateAsync(countryToCreate, cancellationToken);
     }
 
-    public async Task<bool> UpdateAsync(UpdateCountryModel countryToUpdate)
+    public async Task<bool> UpdateAsync(UpdateCountryModel countryToUpdate,
+        CancellationToken cancellationToken = default)
     {
-        return await _countryRepository.UpdateAsync(countryToUpdate) > 0;
+        return await _countryRepository.UpdateAsync(countryToUpdate, cancellationToken) > 0;
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _countryRepository.DeleteAsync(id) > 0;
+        return await _countryRepository.DeleteAsync(id, cancellationToken) > 0;
     }
 
-    public async Task<CountryModel?> GetAsync(int id)
+    public async Task<CountryModel?> GetAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await _countryRepository.GetAsync(id);
+        return await _countryRepository.GetAsync(id, cancellationToken);
     }
 
-    public async Task<IEnumerable<CountryModel>> GetAllAsync()
+    public async Task<IEnumerable<CountryModel>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _countryRepository.GetAllAsync();
+        return await _countryRepository.GetAllAsync(cancellationToken);
     }
 }

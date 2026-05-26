@@ -7,14 +7,14 @@ public sealed class DeleteTests : CountryGrpcServiceTestsBase
     {
         // Arrange
         var request = TestDataFactory.CreateCountryIdRequest(1);
-        CountryService.DeleteAsync(request.Id).Returns(true);
+        CountryService.DeleteAsync(request.Id, Arg.Any<CancellationToken>()).Returns(true);
 
         // Act
         var result = await GrpcService.Delete(request, ServerCallContext);
 
         // Assert
         result.Should().BeOfType<Empty>();
-        await CountryService.Received(1).DeleteAsync(request.Id);
+        await CountryService.Received(1).DeleteAsync(request.Id, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -22,7 +22,7 @@ public sealed class DeleteTests : CountryGrpcServiceTestsBase
     {
         // Arrange
         var request = TestDataFactory.CreateCountryIdRequest(123);
-        CountryService.DeleteAsync(request.Id).Returns(false);
+        CountryService.DeleteAsync(request.Id, Arg.Any<CancellationToken>()).Returns(false);
 
         // Act
         var act = async () => await GrpcService.Delete(request, ServerCallContext);

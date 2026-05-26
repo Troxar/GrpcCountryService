@@ -9,26 +9,27 @@ public sealed class GrpcExceptionCountryServiceDecorator : ICountryService
         _inner = inner;
     }
 
-    public async Task CreateAsync(IEnumerable<CreateCountryModel> countriesToCreate)
+    public async Task CreateAsync(IEnumerable<CreateCountryModel> countriesToCreate,
+        CancellationToken cancellationToken = default)
     {
-        await ExecuteAsync(() => _inner.CreateAsync(countriesToCreate));
+        await ExecuteAsync(() => _inner.CreateAsync(countriesToCreate, cancellationToken));
     }
 
-    public async Task UpdateAsync(UpdateCountryModel countryToUpdate)
+    public async Task UpdateAsync(UpdateCountryModel countryToUpdate, CancellationToken cancellationToken = default)
     {
-        await ExecuteAsync(() => _inner.UpdateAsync(countryToUpdate));
+        await ExecuteAsync(() => _inner.UpdateAsync(countryToUpdate, cancellationToken));
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
-        await ExecuteAsync(() => _inner.DeleteAsync(id));
+        await ExecuteAsync(() => _inner.DeleteAsync(id, cancellationToken));
     }
 
-    public async Task<CountryModel?> GetAsync(int id)
+    public async Task<CountryModel?> GetAsync(int id, CancellationToken cancellationToken = default)
     {
         try
         {
-            return await _inner.GetAsync(id);
+            return await _inner.GetAsync(id, cancellationToken);
         }
         catch (RpcException exception) when (exception.StatusCode == StatusCode.NotFound)
         {
@@ -40,9 +41,9 @@ public sealed class GrpcExceptionCountryServiceDecorator : ICountryService
         }
     }
 
-    public async Task<IEnumerable<CountryModel>> GetAllAsync()
+    public async Task<IEnumerable<CountryModel>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await ExecuteAsync(() => _inner.GetAllAsync());
+        return await ExecuteAsync(() => _inner.GetAllAsync(cancellationToken));
     }
 
     private static async Task ExecuteAsync(Func<Task> action)

@@ -29,7 +29,7 @@ public class SyncUploadedCountriesBackgroundService : BackgroundService
                 try
                 {
                     _globalOptions.ProcessingUpload = true;
-                    await countryService.CreateAsync(countries);
+                    await countryService.CreateAsync(countries, cancellationToken);
                 }
                 catch (RpcException ex)
                 {

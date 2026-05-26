@@ -7,16 +7,16 @@ public sealed class OnPostDeleteTests : IndexModelTestsBase
     {
         // Arrange
         const int countryId = 1;
-        CountryService.DeleteAsync(countryId).Returns(Task.CompletedTask);
+        CountryService.DeleteAsync(countryId, Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
 
         // Act
-        var result = await IndexModel.OnPostDeleteAsync(countryId);
+        var result = await IndexModel.OnPostDeleteAsync(countryId, CancellationToken);
 
         // Assert
         var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
         redirectResult.PageName.Should().Be("./Index");
 
-        await CountryService.Received(1).DeleteAsync(countryId);
+        await CountryService.Received(1).DeleteAsync(countryId, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -29,19 +29,19 @@ public sealed class OnPostDeleteTests : IndexModelTestsBase
             TestDataFactory.CreateCountryModel(2)
         };
         var exception = TestDataFactory.CreateCountryServiceException(CountryServiceErrorCode.ServiceUnavailable);
-        CountryService.DeleteAsync(countryId).Returns(_ => throw exception);
-        CountryService.GetAllAsync().Returns(countries);
+        CountryService.DeleteAsync(countryId, Arg.Any<CancellationToken>()).Returns(_ => throw exception);
+        CountryService.GetAllAsync(Arg.Any<CancellationToken>()).Returns(countries);
 
         // Act
-        var result = await IndexModel.OnPostDeleteAsync(countryId);
+        var result = await IndexModel.OnPostDeleteAsync(countryId, CancellationToken);
 
         // Assert
         result.Should().BeOfType<PageResult>();
         IndexModel.ErrorMessage.Should().Be(exception.Message);
         IndexModel.Countries.Should().BeEquivalentTo(countries);
 
-        await CountryService.Received(1).DeleteAsync(countryId);
-        await CountryService.Received(1).GetAllAsync();
+        await CountryService.Received(1).DeleteAsync(countryId, Arg.Any<CancellationToken>());
+        await CountryService.Received(1).GetAllAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -50,19 +50,19 @@ public sealed class OnPostDeleteTests : IndexModelTestsBase
         // Arrange
         const int countryId = 1;
         var deleteException = TestDataFactory.CreateCountryServiceException(CountryServiceErrorCode.ServiceUnavailable);
-        CountryService.DeleteAsync(countryId).Returns(_ => throw deleteException);
-        CountryService.GetAllAsync().Returns<IEnumerable<CountryModel>>(_ =>
+        CountryService.DeleteAsync(countryId, Arg.Any<CancellationToken>()).Returns(_ => throw deleteException);
+        CountryService.GetAllAsync(Arg.Any<CancellationToken>()).Returns<IEnumerable<CountryModel>>(_ =>
             throw TestDataFactory.CreateCountryServiceException(CountryServiceErrorCode.ServiceUnavailable));
 
         // Act
-        var result = await IndexModel.OnPostDeleteAsync(countryId);
+        var result = await IndexModel.OnPostDeleteAsync(countryId, CancellationToken);
 
         // Assert
         result.Should().BeOfType<PageResult>();
         IndexModel.ErrorMessage.Should().Be(deleteException.Message);
         IndexModel.Countries.Should().BeEmpty();
 
-        await CountryService.Received(1).DeleteAsync(countryId);
-        await CountryService.Received(1).GetAllAsync();
+        await CountryService.Received(1).DeleteAsync(countryId, Arg.Any<CancellationToken>());
+        await CountryService.Received(1).GetAllAsync(Arg.Any<CancellationToken>());
     }
 }
