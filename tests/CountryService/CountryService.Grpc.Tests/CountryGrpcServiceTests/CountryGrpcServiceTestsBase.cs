@@ -9,7 +9,8 @@ public abstract class CountryGrpcServiceTestsBase
     protected CountryGrpcServiceTestsBase()
     {
         CountryService = Substitute.For<ICountryService>();
-        GrpcService = new CountryGrpcService(CountryService);
+        GrpcService = new CountryGrpcService(CountryService, new CountryCreateRequestValidator(),
+            new CountryUpdateRequestValidator(), new CountryIdRequestValidator());
         ServerCallContext = TestDataFactory.CreateServerCallContext();
     }
 }

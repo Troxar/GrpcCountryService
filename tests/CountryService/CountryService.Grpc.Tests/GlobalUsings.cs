@@ -6,6 +6,7 @@ global using CountryService.Grpc.Interceptors;
 global using CountryService.Grpc.Services;
 global using CountryService.Grpc.Tests.Infrastructure;
 global using CountryService.Grpc.v1;
+global using CountryService.Grpc.Validators;
 global using CountryShared.Compression;
 global using FluentAssertions;
 global using Google.Protobuf.WellKnownTypes;

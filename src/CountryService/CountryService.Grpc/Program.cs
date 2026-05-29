@@ -3,7 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCountryServiceGrpc(builder.Configuration, builder.Environment)
     .AddCountryServiceDatabase(builder.Configuration)
     .AddCountryServices()
-    .AddCountryServiceHealthChecks();
+    .AddCountryServiceHealthChecks()
+    .AddCountryServiceValidation();
 
 var app = builder.Build();
 

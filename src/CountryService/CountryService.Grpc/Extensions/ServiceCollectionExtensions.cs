@@ -63,5 +63,12 @@ public static class ServiceCollectionExtensions
 
             return services;
         }
+
+        public IServiceCollection AddCountryServiceValidation()
+        {
+            services.AddValidatorsFromAssemblyContaining<CountryCreateRequestValidator>();
+
+            return services;
+        }
     }
 }

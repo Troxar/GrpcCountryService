@@ -23,7 +23,8 @@ internal static class TestDataFactory
             Description = Guid.NewGuid().ToString(),
             CapitalCity = Guid.NewGuid().ToString(),
             Anthem = Guid.NewGuid().ToString(),
-            FlagUri = Guid.NewGuid().ToString()
+            FlagUri = "http://example.com",
+            Languages = { 1 }
         };
     }
 

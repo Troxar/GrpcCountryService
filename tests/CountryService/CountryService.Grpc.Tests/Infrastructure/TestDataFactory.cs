@@ -65,10 +65,13 @@ internal static class TestDataFactory
 
     internal static CountryCreateRequest CreateCountryCreateRequest()
     {
-        return new CountryCreateRequest
+        var request = new CountryCreateRequest
         {
             Name = Guid.NewGuid().ToString(),
             Description = Guid.NewGuid().ToString()
         };
+        request.Languages.Add(1);
+
+        return request;
     }
 }
