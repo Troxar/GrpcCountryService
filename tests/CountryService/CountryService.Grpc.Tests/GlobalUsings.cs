@@ -1,14 +1,14 @@
-global using System.Text;
 global using CountryService.Domain.Models;
 global using CountryService.Domain.Services;
 global using CountryService.Grpc.Constants;
 global using CountryService.Grpc.Interceptors;
 global using CountryService.Grpc.Services;
+global using CountryService.Grpc.Tests.Extensions;
 global using CountryService.Grpc.Tests.Infrastructure;
 global using CountryService.Grpc.v1;
 global using CountryService.Grpc.Validators;
-global using CountryShared.Compression;
 global using FluentAssertions;
+global using FluentValidation.Results;
 global using Google.Protobuf.WellKnownTypes;
 global using Grpc.Core;
 global using Grpc.Core.Testing;
