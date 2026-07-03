@@ -1,21 +1,10 @@
-using Microsoft.Extensions.Configuration;
-
 namespace CountryService.DAL.Database;
 
 public class CountryContext : DbContext
 {
-    private readonly IConfiguration _configuration;
-
-    public CountryContext(DbContextOptions<CountryContext> options, IConfiguration configuration)
+    public CountryContext(DbContextOptions<CountryContext> options)
         : base(options)
     {
-        _configuration = configuration;
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var connectionString = _configuration.GetConnectionString("CountryService");
-        optionsBuilder.UseNpgsql(connectionString);
     }
 
     public DbSet<Country> Countries { get; set; }

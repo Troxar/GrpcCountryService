@@ -58,8 +58,11 @@ public static class ServiceCollectionExtensions
 
         public IServiceCollection AddCountryServiceDatabase(IConfiguration config)
         {
+            var connectionString = config.GetConnectionString("CountryService")
+                                   ?? throw new InvalidOperationException(
+                                       "Connection string 'CountryService' is not configured.");
+            services.AddDbContext<CountryContext>(options => options.UseNpgsql(connectionString));
             services.Configure<DatabaseOptions>(config.GetSection(DatabaseOptions.SectionName));
-            services.AddDbContext<CountryContext>();
 
             return services;
         }

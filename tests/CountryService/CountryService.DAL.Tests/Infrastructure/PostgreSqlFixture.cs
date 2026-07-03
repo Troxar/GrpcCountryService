@@ -31,17 +31,10 @@ public class PostgreSqlFixture : IAsyncLifetime
 
     public CountryContext CreateContext()
     {
-        var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["ConnectionStrings:CountryService"] = ConnectionString
-            })
-            .Build();
-
         var options = new DbContextOptionsBuilder<CountryContext>()
             .UseNpgsql(ConnectionString)
             .Options;
 
-        return new CountryContext(options, configuration);
+        return new CountryContext(options);
     }
 }
