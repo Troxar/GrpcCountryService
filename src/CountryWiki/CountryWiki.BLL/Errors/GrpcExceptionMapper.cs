@@ -10,6 +10,9 @@ public static class GrpcExceptionMapper
             {
                 StatusCode.NotFound => new CountryServiceException(CountryServiceErrorCode.NotFound,
                     "The requested country was not found", exception),
+                StatusCode.AlreadyExists => new CountryServiceException(CountryServiceErrorCode.AlreadyExists,
+                    exception.Status.Detail is { Length: > 0 } ? exception.Status.Detail : "Country already exists",
+                    exception),
                 StatusCode.Unavailable => new CountryServiceException(CountryServiceErrorCode.ServiceUnavailable,
                     "Country service is temporarily unavailable", exception),
                 StatusCode.DeadlineExceeded => new CountryServiceException(CountryServiceErrorCode.Timeout,

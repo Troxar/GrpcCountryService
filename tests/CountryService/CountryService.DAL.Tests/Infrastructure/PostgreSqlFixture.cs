@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.Diagnostics;
+
 namespace CountryService.DAL.Tests.Infrastructure;
 
 public class PostgreSqlFixture : IAsyncLifetime
@@ -7,8 +9,6 @@ public class PostgreSqlFixture : IAsyncLifetime
         .WithUsername("postgres")
         .WithPassword("secretpassword")
         .Build();
-
-    public string ConnectionString => _postgres.GetConnectionString();
 
     public async ValueTask InitializeAsync()
     {
@@ -29,12 +29,20 @@ public class PostgreSqlFixture : IAsyncLifetime
             "TRUNCATE TABLE \"CountryLanguages\", \"Countries\" RESTART IDENTITY CASCADE;");
     }
 
-    public CountryContext CreateContext()
+    public CountryContext CreateContext(params IInterceptor[] interceptors)
     {
-        var options = new DbContextOptionsBuilder<CountryContext>()
-            .UseNpgsql(ConnectionString)
-            .Options;
-
+        var options = CreateContextOptions(interceptors);
         return new CountryContext(options);
+    }
+
+    public DbContextOptions<CountryContext> CreateContextOptions(params IInterceptor[] interceptors)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<CountryContext>()
+            .UseNpgsql(_postgres.GetConnectionString());
+
+        if (interceptors.Length > 0)
+            optionsBuilder.AddInterceptors(interceptors);
+
+        return optionsBuilder.Options;
     }
 }

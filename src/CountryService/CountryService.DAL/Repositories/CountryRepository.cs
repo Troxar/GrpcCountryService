@@ -1,3 +1,6 @@
+using CountryService.Domain.Exceptions;
+using Npgsql;
+
 namespace CountryService.DAL.Repositories;
 
 public class CountryRepository : ICountryRepository
@@ -12,10 +15,23 @@ public class CountryRepository : ICountryRepository
     public async Task<int> CreateAsync(CreateCountryModel countryToCreate,
         CancellationToken cancellationToken = default)
     {
+        var countryExists = await _countryContext.Countries
+            .AnyAsync(x => x.Name == countryToCreate.Name, cancellationToken);
+        if (countryExists)
+            throw new CountryAlreadyExistsException(countryToCreate.Name);
+
         var country = countryToCreate.ToEntity();
 
         await _countryContext.Countries.AddAsync(country, cancellationToken);
-        await _countryContext.SaveChangesAsync(cancellationToken);
+
+        try
+        {
+            await _countryContext.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException exception) when (IsUniqueViolation(exception))
+        {
+            throw new CountryAlreadyExistsException(countryToCreate.Name, exception);
+        }
 
         return country.Id;
     }
@@ -56,5 +72,10 @@ public class CountryRepository : ICountryRepository
             .AsNoTracking()
             .ToModel()
             .ToArrayAsync(cancellationToken);
+    }
+
+    private static bool IsUniqueViolation(DbUpdateException exception)
+    {
+        return exception.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation };
     }
 }

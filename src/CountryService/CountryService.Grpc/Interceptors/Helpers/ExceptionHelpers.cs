@@ -1,3 +1,5 @@
+using CountryService.Domain.Exceptions;
+
 namespace CountryService.Grpc.Interceptors.Helpers;
 
 public static class ExceptionHelpers
@@ -9,6 +11,8 @@ public static class ExceptionHelpers
         return exception switch
         {
             TimeoutException timeoutException => HandleTimeoutException(timeoutException, correlationId, logger),
+            CountryAlreadyExistsException countryAlreadyExistsException => HandleCountryAlreadyExistsException(
+                countryAlreadyExistsException, correlationId, logger),
             RpcException rpcException => HandleRpcException(rpcException, correlationId, logger),
             _ => HandleDefaultException(exception, correlationId, logger)
         };
@@ -34,6 +38,16 @@ public static class ExceptionHelpers
     {
         logger.LogError(exception, "An error occured. CorrelationId: {CorrelationId}", correlationId);
         var status = new Status(StatusCode.Internal, "Internal server error");
+        return new RpcException(status, CreateTrailers(correlationId));
+    }
+
+    private static RpcException HandleCountryAlreadyExistsException<T>(CountryAlreadyExistsException exception,
+        string correlationId, ILogger<T> logger)
+    {
+        logger.LogWarning(exception,
+            "Country already exists. Country name: {CountryName}. CorrelationId: {CorrelationId}", exception.Name,
+            correlationId);
+        var status = new Status(StatusCode.AlreadyExists, exception.Message);
         return new RpcException(status, CreateTrailers(correlationId));
     }
 

@@ -15,11 +15,11 @@ internal static class TestDataFactory
         };
     }
 
-    internal static CountryCreateRequest CreateCountryCreateRequest()
+    internal static CountryCreateRequest CreateCountryCreateRequest(string? name = null)
     {
         return new CountryCreateRequest
         {
-            Name = Guid.NewGuid().ToString(),
+            Name = name ?? Guid.NewGuid().ToString(),
             Description = Guid.NewGuid().ToString(),
             CapitalCity = Guid.NewGuid().ToString(),
             Anthem = Guid.NewGuid().ToString(),

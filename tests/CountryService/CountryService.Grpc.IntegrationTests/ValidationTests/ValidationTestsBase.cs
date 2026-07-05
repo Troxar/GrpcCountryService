@@ -10,4 +10,13 @@ public abstract class ValidationTestsBase
     {
         Fixture = fixture;
     }
+
+    protected CountryContext CreateContext()
+    {
+        var options = new DbContextOptionsBuilder<CountryContext>()
+            .UseNpgsql(Fixture.Postgres.GetConnectionString())
+            .Options;
+
+        return new CountryContext(options);
+    }
 }

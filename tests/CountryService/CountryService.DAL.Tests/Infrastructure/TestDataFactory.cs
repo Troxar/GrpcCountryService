@@ -2,11 +2,11 @@ namespace CountryService.DAL.Tests.Infrastructure;
 
 internal static class TestDataFactory
 {
-    internal static CreateCountryModel CreateCountryModel(params int[] languageIds)
+    internal static CreateCountryModel CreateCountryModel(string? name = null, params int[] languageIds)
     {
         return new CreateCountryModel
         {
-            Name = Guid.NewGuid().ToString(),
+            Name = name ?? Guid.NewGuid().ToString(),
             Description = Guid.NewGuid().ToString(),
             FlagUri = Guid.NewGuid().ToString(),
             CapitalCity = Guid.NewGuid().ToString(),
@@ -15,11 +15,11 @@ internal static class TestDataFactory
         };
     }
 
-    internal static Country CreateCountry()
+    internal static Country CreateCountry(string? name = null)
     {
         return new Country
         {
-            Name = Guid.NewGuid().ToString(),
+            Name = name ?? Guid.NewGuid().ToString(),
             Description = Guid.NewGuid().ToString(),
             FlagUri = Guid.NewGuid().ToString(),
             CapitalCity = Guid.NewGuid().ToString(),
