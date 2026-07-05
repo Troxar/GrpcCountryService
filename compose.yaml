@@ -25,7 +25,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       
-      Database__ApplyMigrationsOnStart: true
+      Database__ApplyMigrationsOnStartup: true
       
       Kestrel__Endpoints__Grpc__Url: http://0.0.0.0:5076
       Kestrel__Endpoints__Grpc__Protocols: Http2
