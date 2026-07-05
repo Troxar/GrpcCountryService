@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
-
 namespace CountryService.DAL.Database;
 
 public sealed class CountryContextFactory : IDesignTimeDbContextFactory<CountryContext>

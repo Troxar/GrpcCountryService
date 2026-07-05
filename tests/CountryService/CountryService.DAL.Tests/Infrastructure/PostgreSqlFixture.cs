@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore.Diagnostics;
-
 namespace CountryService.DAL.Tests.Infrastructure;
 
 public class PostgreSqlFixture : IAsyncLifetime

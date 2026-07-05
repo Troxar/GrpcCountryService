@@ -1,6 +1,3 @@
-using CountryService.Domain.Exceptions;
-using Npgsql;
-
 namespace CountryService.DAL.Repositories;
 
 public class CountryRepository : ICountryRepository

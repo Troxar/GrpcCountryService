@@ -1,5 +1,3 @@
-using CountryService.Domain.Exceptions;
-
 namespace CountryService.DAL.Tests.CountryRepositoryTests;
 
 public sealed class CreateTests(PostgreSqlFixture fixture) : CountryRepositoryTestsBase(fixture)

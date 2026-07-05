@@ -1,5 +1,5 @@
 global using CountryService.Grpc.v1;
-global using CountryShared.Options;
+global using CountryShared.Grpc.Options;
 global using CountryWiki.DAL.Repositories;
 global using CountryWiki.DAL.Tests.Infrastructure;
 global using CountryWiki.Domain.Models;

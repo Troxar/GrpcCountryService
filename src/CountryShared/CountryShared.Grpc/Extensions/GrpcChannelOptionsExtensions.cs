@@ -1,4 +1,7 @@
-namespace CountryShared.Extensions;
+using CountryShared.Grpc.Compression;
+using CountryShared.Grpc.Options;
+
+namespace CountryShared.Grpc.Extensions;
 
 public static class GrpcChannelOptionsExtensions
 {

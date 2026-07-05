@@ -1,4 +1,4 @@
-namespace CountryShared.Options;
+namespace CountryShared.Grpc.Options;
 
 public sealed class GrpcOptions
 {

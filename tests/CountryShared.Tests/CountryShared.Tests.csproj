@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\CountryShared\CountryShared.csproj" />
+      <ProjectReference Include="..\..\src\CountryShared\CountryShared.Grpc\CountryShared.Grpc.csproj" />
     </ItemGroup>
 
 </Project>

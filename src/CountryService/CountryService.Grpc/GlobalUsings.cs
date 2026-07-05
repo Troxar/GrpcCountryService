@@ -1,6 +1,7 @@
 global using System.IO.Compression;
 global using CountryService.DAL.Database;
 global using CountryService.DAL.Repositories;
+global using CountryService.Domain.Exceptions;
 global using CountryService.Domain.Repositories;
 global using CountryService.Domain.Services;
 global using CountryService.Grpc.Constants;
@@ -12,8 +13,8 @@ global using CountryService.Grpc.Options;
 global using CountryService.Grpc.Services;
 global using CountryService.Grpc.v1;
 global using CountryService.Grpc.Validators;
-global using CountryShared.Compression;
-global using CountryShared.Options;
+global using CountryShared.Grpc.Compression;
+global using CountryShared.Grpc.Options;
 global using FluentValidation;
 global using FluentValidation.Results;
 global using Google.Protobuf.WellKnownTypes;

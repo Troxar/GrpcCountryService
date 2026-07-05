@@ -2,7 +2,7 @@ global using System.Net;
 global using System.Net.Http.Headers;
 global using CountryService.DAL.Database;
 global using CountryService.DAL.Database.Entities;
-global using CountryShared.Extensions;
+global using CountryShared.Grpc.Extensions;
 global using CountryService.Grpc.Constants;
 global using CountryService.Grpc.IntegrationTests.Infrastructure;
 global using CountryService.Grpc.v1;

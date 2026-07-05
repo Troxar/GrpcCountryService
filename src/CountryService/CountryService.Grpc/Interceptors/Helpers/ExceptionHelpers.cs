@@ -1,5 +1,3 @@
-using CountryService.Domain.Exceptions;
-
 namespace CountryService.Grpc.Interceptors.Helpers;
 
 public static class ExceptionHelpers

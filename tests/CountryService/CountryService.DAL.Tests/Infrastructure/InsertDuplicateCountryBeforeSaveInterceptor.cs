@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore.Diagnostics;
-
 namespace CountryService.DAL.Tests.Infrastructure;
 
 internal sealed class InsertDuplicateCountryBeforeSaveInterceptor : SaveChangesInterceptor

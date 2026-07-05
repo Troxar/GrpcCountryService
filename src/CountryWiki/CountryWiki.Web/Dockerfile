@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY ["src/CountryContracts/", "CountryContracts/"]
-COPY ["src/CountryShared/CountryShared.csproj", "CountryShared/"]
+COPY ["src/CountryShared/CountryShared.Grpc/CountryShared.Grpc.csproj", "CountryShared/CountryShared.Grpc/"]
 COPY ["src/CountryWiki/CountryWiki.Domain/CountryWiki.Domain.csproj", "CountryWiki/CountryWiki.Domain/"]
 COPY ["src/CountryWiki/CountryWiki.DAL/CountryWiki.DAL.csproj", "CountryWiki/CountryWiki.DAL/"]
 COPY ["src/CountryWiki/CountryWiki.BLL/CountryWiki.BLL.csproj", "CountryWiki/CountryWiki.BLL/"]

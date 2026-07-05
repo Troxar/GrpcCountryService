@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\CountryShared\CountryShared.csproj" />
+        <ProjectReference Include="..\..\CountryShared\CountryShared.Grpc\CountryShared.Grpc.csproj" />
         <ProjectReference Include="..\CountryWiki.BLL\CountryWiki.BLL.csproj" />
         <ProjectReference Include="..\CountryWiki.DAL\CountryWiki.DAL.csproj" />
         <ProjectReference Include="..\CountryWiki.Domain\CountryWiki.Domain.csproj" />
