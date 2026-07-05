@@ -1,4 +1,4 @@
-namespace CountryShared.Tests.BrotliCompressionProviderTests;
+namespace CountryShared.Grpc.Tests.BrotliCompressionProviderTests;
 
 public sealed class CreateCompressionStreamTests
 {
